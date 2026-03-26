@@ -1,0 +1,48 @@
+# Backend: Django API
+
+Инструкция по развертыванию бэкенд-части проекта.
+
+# 1. Подготовка окружения
+Убедитесь, что у вас установлен Python 3.10+. Из папки `backend` выполните команды:
+
+## Создаем виртуальное окружение
+<pre>
+python -m venv .venv
+</pre>
+## Активируем его
+### Windows
+<pre>
+ .\venv\Scripts\activate
+</pre>
+или
+<pre>
+.\venv\bin\activate
+</pre>
+### Linux
+<pre>
+source .venv/bin/activate
+</pre>
+# 2. Установка зависимостей
+### Установите все необходимые библиотеки:
+<pre>
+pip install -r requirements.txt
+</pre>
+# 3. Создание базы данных
+### Примените миграции, чтобы создать локальную БД:
+<pre>
+python manage.py migrate
+</pre>
+# 4. Запуск сервера
+### Запустите бэкенд сервер:
+<pre>
+python manage.py runserver
+</pre>
+### После этого API будет доступно по адресу: http://127.0.0.1:8000/
+
+---
+
+## 🛠 Полезные команды
+создать админа для входа в `/admin`
+<pre>
+python manage.py createsuperuser
+</pre>
