@@ -1,4 +1,4 @@
-# --- Python / Django ---
+# --- Backend (Python/Django) ---
 .venv/
 env/
 venv/
