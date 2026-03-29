@@ -1,7 +1,16 @@
 from rest_framework import generics
 from rest_framework.filters import OrderingFilter
-from .models import User, User_Specialization, User_Specialization_Skill
-from .serializers import UserSerializer, UserSpecializationSerializer, SkillSerializer
+from rest_framework.permissions import IsAuthenticated
+from .models import User, User_Specialization, User_Specialization_Skill, Skill, Specialization
+from .serializers import SpecializationSerializer, SkillSerializer, UserSerializer, UserRegisterSerializer, UserSpecializationCreateSerializer, UserSpecializationUpdateSerializer, UserSkillCreateSerializer, UserSkillUpdateSerializer
+
+class SpecializationsListAPIView(generics.ListAPIView):
+    queryset = Specialization.objects.all()
+    serializer_class = SpecializationSerializer
+
+class SkillsListAPIView(generics.ListAPIView):
+    queryset = Skill.objects.all()
+    serializer_class = SkillSerializer
 
 class UserListAPIView(generics.ListAPIView):
     queryset = User.objects.all()
@@ -45,3 +54,49 @@ class UsersBySpecializationAPIView(generics.ListAPIView):
         #filtering and sorting the queryset
         return User.objects.filter(specializations__specialization_id=spec_id).distinct()
 
+
+
+
+class UserCreateAPIView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserRegisterSerializer
+    
+class UserProfileAPIView(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    http_method_names = ['get', 'patch', 'head', 'options']
+    # Добавляем кверисет обязательно!
+    queryset = User.objects.all() 
+    serializer_class = UserSerializer
+
+    def get_object(self):
+        return self.request.user
+
+class UserSpecializationCreateAPIView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserSpecializationCreateSerializer
+
+
+class UserSpecializationUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    http_method_names = ['patch', 'delete', 'head', 'options']
+    serializer_class = UserSpecializationUpdateSerializer
+    
+
+    def get_queryset(self):
+        # Юзер может дергать только свои записи
+        return User_Specialization.objects.filter(user=self.request.user)
+
+
+class UserSkillCreateAPIView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserSkillCreateSerializer
+    
+
+class UserSkillUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    http_method_names = ['patch', 'delete', 'head', 'options']
+    serializer_class = UserSkillUpdateSerializer
+
+    def get_queryset(self):
+        # Фильтруем через связь со специализацией юзера
+        return User_Specialization_Skill.objects.filter(user_specialization__user=self.request.user)

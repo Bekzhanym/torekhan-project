@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -44,3 +45,16 @@ class User_Specialization_Skill(models.Model):
     class Meta:
         # Эта магия запретит дубликаты одного навыка внутри одного направления юзера
         unique_together = ('user_specialization', 'skill')
+    
+    def clean(self):
+        # Проверяем, что скилл подходит к специализации
+        if self.skill.specialization != self.user_specialization.specialization:
+            raise ValidationError(
+                f"Ошибка: Скилл '{self.skill.name}' не относится к направлению "
+                f"'{self.user_specialization.specialization.name}'!"
+            )
+
+    def save(self, *args, **kwargs):
+        # Принудительно запускаем проверку перед сохранением
+        self.full_clean()
+        super().save(*args, **kwargs)
