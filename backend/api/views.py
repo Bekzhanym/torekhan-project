@@ -1,6 +1,8 @@
 from rest_framework import generics
-from rest_framework.filters import OrderingFilter
+from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from .models import User, User_Specialization, User_Specialization_Skill, Skill, Specialization
 from .serializers import SpecializationSerializer, SkillSerializer, UserSerializer, UserRegisterSerializer, UserSpecializationCreateSerializer, UserSpecializationUpdateSerializer, UserSkillCreateSerializer, UserSkillUpdateSerializer
 
@@ -16,9 +18,23 @@ class UserListAPIView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     # ordering filter
-    filter_backends = [OrderingFilter]
+    filter_backends = [filters.OrderingFilter]
     ordering_fields = ['username', 'date_joined']
     ordering = ['username']
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'ordering', 
+                openapi.IN_QUERY, 
+                description="Сортировка. Для обратного порядка добавьте '-' (напр. -username)", 
+                type=openapi.TYPE_STRING, 
+                # Вот здесь мы создаем Dropdown!
+                enum=['username', '-username', 'date_joined', '-date_joined']
+            ),
+        ]
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 class UserDetailAPIView(generics.RetrieveAPIView):
     queryset = User.objects.all()
@@ -32,7 +48,7 @@ class UserDetailByUsernameAPIView(generics.RetrieveAPIView):
 class UsersBySkillAPIView(generics.ListAPIView):
     serializer_class = UserSerializer
 
-    filter_backends = [OrderingFilter]
+    filter_backends = [filters.OrderingFilter]
     ordering_fields = ['specializations__skills__level', 'username', 'date_joined']
     ordering = ['-specializations__skills__level']
 
@@ -41,11 +57,25 @@ class UsersBySkillAPIView(generics.ListAPIView):
         # Здесь мы ТОЛЬКО фильтруем, но НЕ сортируем. 
         # Сортировку возьмет на себя OrderingFilter.
         return User.objects.filter(specializations__skills__skill_id=skill_id).distinct()
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'ordering', 
+                openapi.IN_QUERY, 
+                description="Сортировка. Для обратного порядка добавьте '-' (напр. -username)", 
+                type=openapi.TYPE_STRING, 
+                # Вот здесь мы создаем Dropdown!
+                enum=['username', '-username', 'date_joined', '-date_joined']
+            ),
+        ]
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
     
 class UsersBySpecializationAPIView(generics.ListAPIView):
     serializer_class = UserSerializer
 
-    filter_backends = [OrderingFilter]
+    filter_backends = [filters.OrderingFilter]
     ordering_fields = ['specializations__level', 'username', 'date_joined']
     ordering = ['-specializations__level']
     
@@ -53,6 +83,20 @@ class UsersBySpecializationAPIView(generics.ListAPIView):
         spec_id = self.kwargs['spec_id']
         #filtering and sorting the queryset
         return User.objects.filter(specializations__specialization_id=spec_id).distinct()
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'ordering', 
+                openapi.IN_QUERY, 
+                description="Сортировка. Для обратного порядка добавьте '-' (напр. -username)", 
+                type=openapi.TYPE_STRING, 
+                # Вот здесь мы создаем Dropdown!
+                enum=['username', '-username', 'date_joined', '-date_joined']
+            ),
+        ]
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
 
