@@ -1,7 +1,25 @@
 from rest_framework import serializers
 from .models import User, Specialization, Skill, User_Specialization, User_Specialization_Skill
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-### GET ###
+### JWT Token ###
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # ДОБАВЛЯЕМ СВОИ ПОЛЯ В ТОКЕН
+        token['username'] = user.username
+        # Если у тебя есть поле role в модели User, добавь его так:
+        token['is_staff'] = user.is_staff  # Стандартное поле Django для админов
+        
+        return token
+
+
+
+
+### READ ###
 
 class SpecializationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,7 +40,7 @@ class UserSkillSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User_Specialization_Skill
-        fields = ['user_skill_id', 'skill_id', 'skill_name', 'level']
+        fields = ['skill_id', 'skill_name', 'user_skill_id', 'level']
 
 class UserSpecializationSerializer(serializers.ModelSerializer):
     # Переименовываем ID связки в user_spec_id
@@ -33,7 +51,7 @@ class UserSpecializationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User_Specialization
-        fields = ['user_spec_id', 'spec_id', 'spec_name', 'level', 'skills']
+        fields = ['spec_id', 'spec_name', 'user_spec_id', 'level', 'skills']
 
 class UserSerializer(serializers.ModelSerializer):
     specializations = UserSpecializationSerializer(many=True, read_only=True)

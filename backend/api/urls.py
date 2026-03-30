@@ -1,10 +1,10 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import UserListAPIView, UserDetailAPIView, UserDetailByUsernameAPIView, UsersBySkillAPIView, UsersBySpecializationAPIView, UserCreateAPIView, UserProfileAPIView, UserSpecializationCreateAPIView, UserSpecializationUpdateAPIView, UserSkillCreateAPIView, UserSkillUpdateAPIView, SkillsListAPIView, SpecializationsListAPIView
+from .views import UserListAPIView, UserDetailAPIView, UserDetailByUsernameAPIView, UsersBySkillAPIView, UsersBySpecializationAPIView, UserCreateAPIView, UserProfileAPIView, UserSpecializationCreateAPIView, UserSpecializationUpdateAPIView, UserSkillCreateAPIView, UserSkillUpdateAPIView, SkillsListAPIView, SpecializationsListAPIView, MyTokenObtainPairView
 
 urlpatterns = [
     ### AUTHENTICATION ###
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), # Login (Get token)
+    path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'), # Login (Get token)
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # Relogin (Refresh token)
     path('users/me/', UserProfileAPIView.as_view(), name='user-profile'), # get profile / update email
     
