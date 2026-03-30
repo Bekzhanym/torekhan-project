@@ -25,12 +25,13 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING(f'Администратор "{admin_username}" уже существует'))
             return
 
-        User.objects.create_user(
+        admin_user = User.objects.create_superuser(
             username=admin_username,
             email=admin_email,
             password=admin_password,
-            role='ADMIN'
         )
+        admin_user.role = 'ADMIN'
+        admin_user.save()
         self.stdout.write(self.style.SUCCESS(f'Администратор "{admin_username}" успешно создан'))
 
     def _create_specializations_and_skills(self):
