@@ -1,6 +1,11 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import UserListAPIView, UserDetailAPIView, UserDetailByUsernameAPIView, UsersBySkillAPIView, UsersBySpecializationAPIView, UserCreateAPIView, UserProfileAPIView, UserSpecializationCreateAPIView, UserSpecializationUpdateAPIView, UserSkillCreateAPIView, UserSkillUpdateAPIView, SkillsListAPIView, SpecializationsListAPIView, MyTokenObtainPairView
+from .views import (UserListAPIView, UserDetailAPIView, UserDetailByUsernameAPIView, UsersBySkillAPIView, 
+                    UsersBySpecializationAPIView, UserCreateAPIView, UserProfileAPIView, 
+                    UserSpecializationCreateAPIView, UserSpecializationUpdateAPIView, UserSkillCreateAPIView, 
+                    UserSkillUpdateAPIView, SkillsListAPIView, SpecializationsListAPIView, MyTokenObtainPairView,
+                    AdminSpecializationCreateAPIView, AdminSpecializationUpdateAPIView, AdminSpecializationDeleteAPIView,
+                    AdminSkillCreateAPIView, AdminSkillUpdateAPIView, AdminSkillDeleteAPIView)
 
 urlpatterns = [
     ### AUTHENTICATION ###
@@ -25,5 +30,16 @@ urlpatterns = [
     ### UPDATE & DELETE ###
     path('users/me/change-specialization/<int:pk>/', UserSpecializationUpdateAPIView.as_view(), name='manage-skill'), # change / delete user_skill relation
     path('users/me/change-skill/<int:pk>/', UserSkillUpdateAPIView.as_view(), name='manage-skill'), # change / delete user_skill relation
+    
+    ### ADMIN ENDPOINTS ###
+    # Specializations management
+    path('admin/specializations/create/', AdminSpecializationCreateAPIView.as_view(), name='admin-spec-create'), # create specialization
+    path('admin/specializations/<int:pk>/update/', AdminSpecializationUpdateAPIView.as_view(), name='admin-spec-update'), # update specialization
+    path('admin/specializations/<int:pk>/delete/', AdminSpecializationDeleteAPIView.as_view(), name='admin-spec-delete'), # delete specialization
+    
+    # Skills management
+    path('admin/skills/create/', AdminSkillCreateAPIView.as_view(), name='admin-skill-create'), # create skill
+    path('admin/skills/<int:pk>/update/', AdminSkillUpdateAPIView.as_view(), name='admin-skill-update'), # update skill
+    path('admin/skills/<int:pk>/delete/', AdminSkillDeleteAPIView.as_view(), name='admin-skill-delete'), # delete skill
     
 ]

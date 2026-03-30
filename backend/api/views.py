@@ -6,6 +6,7 @@ from drf_yasg import openapi
 from .models import User, User_Specialization, User_Specialization_Skill, Skill, Specialization
 from .serializers import SpecializationSerializer, SkillSerializer, UserSerializer, UserRegisterSerializer, UserSpecializationCreateSerializer, UserSpecializationUpdateSerializer, UserSkillCreateSerializer, UserSkillUpdateSerializer, MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from .permissions import IsAdmin
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -149,3 +150,49 @@ class UserSkillUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         # Фильтруем через связь со специализацией юзера
         return User_Specialization_Skill.objects.filter(user_specialization__user=self.request.user)
+
+
+# ADMIN ENDPOINTS
+
+class AdminSpecializationCreateAPIView(generics.CreateAPIView):
+    """Создание новой специализации (только для ADMIN)"""
+    permission_classes = [IsAuthenticated, IsAdmin]
+    queryset = Specialization.objects.all()
+    serializer_class = SpecializationSerializer
+
+
+class AdminSpecializationUpdateAPIView(generics.UpdateAPIView):
+    """Обновление специализации (только для ADMIN)"""
+    permission_classes = [IsAuthenticated, IsAdmin]
+    queryset = Specialization.objects.all()
+    serializer_class = SpecializationSerializer
+    http_method_names = ['put', 'patch', 'head', 'options']
+
+
+class AdminSpecializationDeleteAPIView(generics.DestroyAPIView):
+    """Удаление специализации (только для ADMIN)"""
+    permission_classes = [IsAuthenticated, IsAdmin]
+    queryset = Specialization.objects.all()
+    http_method_names = ['delete', 'head', 'options']
+
+
+class AdminSkillCreateAPIView(generics.CreateAPIView):
+    """Создание нового скилла (только для ADMIN)"""
+    permission_classes = [IsAuthenticated, IsAdmin]
+    queryset = Skill.objects.all()
+    serializer_class = SkillSerializer
+
+
+class AdminSkillUpdateAPIView(generics.UpdateAPIView):
+    """Обновление скилла (только для ADMIN)"""
+    permission_classes = [IsAuthenticated, IsAdmin]
+    queryset = Skill.objects.all()
+    serializer_class = SkillSerializer
+    http_method_names = ['put', 'patch', 'head', 'options']
+
+
+class AdminSkillDeleteAPIView(generics.DestroyAPIView):
+    """Удаление скилла (только для ADMIN)"""
+    permission_classes = [IsAuthenticated, IsAdmin]
+    queryset = Skill.objects.all()
+    http_method_names = ['delete', 'head', 'options']

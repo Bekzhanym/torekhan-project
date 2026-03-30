@@ -38,15 +38,15 @@ pip install -r requirements.txt
 <pre>
 python manage.py migrate
 </pre>
-# 4. Создание администратора
-### После применения миграций создайте администратора для доступа к API:
+# 4. Инициализация данных
+### Создайте администратора, направления и скиллы:
 <pre>
-python manage.py create_admin
+python manage.py init_data
 </pre>
-### Учетные данные администратора:
-- Username: admin
-- Password: admin
-- Email: admin@gmail.com
+### Команда автоматически создает:
+- Администратора (username: admin, password: admin, email: admin@gmail.com)
+- 10 направлений (Backend, Frontend, Mobile, DevOps, Data Science и др.)
+- 50 скиллов, привязанных к направлениям
 
 # 5. Запуск сервера
 ### Запустите бэкенд сервер:
@@ -58,7 +58,7 @@ python manage.py runserver
 ---
 
 ## Полезные команды
-создать администратора вручную (альтернатива create_admin):
+создать администратора вручную (альтернатива init_data):
 <pre>
 python manage.py createsuperuser
 </pre>
