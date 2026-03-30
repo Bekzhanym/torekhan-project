@@ -38,7 +38,7 @@ SECRET_KEY = 'django-insecure-+!*flmb9wsq%%_1#_4t1)qzs4k8vi0drh^^a-%mj5wb_*3t5+z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['team-find.xyz', 'api.team-find.xyz', 'localhost', '127.0.0.1']
 
 
 # Application definition
