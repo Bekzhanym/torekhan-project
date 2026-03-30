@@ -38,7 +38,17 @@ pip install -r requirements.txt
 <pre>
 python manage.py migrate
 </pre>
-# 4. Запуск сервера
+# 4. Создание администратора
+### После применения миграций создайте администратора для доступа к API:
+<pre>
+python manage.py create_admin
+</pre>
+### Учетные данные администратора:
+- Username: admin
+- Password: admin
+- Email: admin@gmail.com
+
+# 5. Запуск сервера
 ### Запустите бэкенд сервер:
 <pre>
 python manage.py runserver
@@ -47,8 +57,8 @@ python manage.py runserver
 
 ---
 
-## 🛠 Полезные команды
-создать админа для входа в `/admin`
+## Полезные команды
+создать администратора вручную (альтернатива create_admin):
 <pre>
 python manage.py createsuperuser
 </pre>

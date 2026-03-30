@@ -11,8 +11,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         # ДОБАВЛЯЕМ СВОИ ПОЛЯ В ТОКЕН
         token['username'] = user.username
-        # Если у тебя есть поле role в модели User, добавь его так:
-        token['is_staff'] = user.is_staff  # Стандартное поле Django для админов
+        token['role'] = user.role
         
         return token
 
@@ -58,9 +57,9 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = User
-        fields = ['id', 'username', 'email', 'specializations']
+        fields = ['id', 'username', 'email', 'role', 'specializations']
         # Поле id обычно только для чтения
-        read_only_fields = ['id', 'username']
+        read_only_fields = ['id', 'username', 'role']
 
 
 ### CREATE UPDATE DELETE ###
@@ -75,10 +74,12 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         # Используем специальный метод create_user, который сам захеширует пароль
+        # role по умолчанию будет USER за счет default='USER' в моделе
         user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data.get('email', ''),
-            password=validated_data['password']
+            password=validated_data['password'],
+            role='USER'
         )
         return user
     
