@@ -38,7 +38,7 @@ SECRET_KEY = 'django-insecure-+!*flmb9wsq%%_1#_4t1)qzs4k8vi0drh^^a-%mj5wb_*3t5+z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['team-find.xyz', 'api.team-find.xyz', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['team-find.xyz', 'api.team-find.xyz', 'localhost', '127.0.0.1', '192.168.0.102']
 
 
 # Application definition
@@ -137,7 +137,12 @@ USE_TZ = True
 
 
 AUTH_USER_MODEL = 'api.User'
+CSRF_TRUSTED_ORIGINS = ['https://team-find.xyz']
 CORS_ALLOW_ALL_ORIGINS = True  
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = False 
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

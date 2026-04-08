@@ -18,7 +18,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 
-### READ ###
 
 class SpecializationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -62,7 +61,8 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'username', 'role']
 
 
-### CREATE UPDATE DELETE ###
+
+
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     # Указываем, что пароль только для записи (не будет отображаться в GET ответах)

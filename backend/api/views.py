@@ -152,6 +152,9 @@ class UserSkillUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
         return User_Specialization_Skill.objects.filter(user_specialization__user=self.request.user)
 
 
+
+
+
 # ADMIN ENDPOINTS
 
 class AdminSpecializationCreateAPIView(generics.CreateAPIView):
