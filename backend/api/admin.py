@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Specialization, Skill, User_Specialization, User_Specialization_Skill
+from .models import User, Specialization, Skill, User_Specialization, User_Specialization_Skill, Post
 
 
 # register your models here
@@ -24,3 +24,4 @@ admin.site.register(User, MyUserAdmin)
 admin.site.register(Specialization)
 admin.site.register(Skill)
 admin.site.register(User_Specialization_Skill)
+admin.site.register(Post)

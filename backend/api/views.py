@@ -1,10 +1,12 @@
-from rest_framework import generics
+from rest_framework import generics, exceptions
 from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from .models import User, User_Specialization, User_Specialization_Skill, Skill, Specialization
-from .serializers import SpecializationSerializer, SkillSerializer, UserSerializer, UserRegisterSerializer, UserSpecializationCreateSerializer, UserSpecializationUpdateSerializer, UserSkillCreateSerializer, UserSkillUpdateSerializer, MyTokenObtainPairSerializer
+from .models import User, User_Specialization, User_Specialization_Skill, Skill, Specialization, Post
+from .serializers import (SpecializationSerializer, SkillSerializer, UserSerializer, UserRegisterSerializer, 
+                          UserSpecializationCreateSerializer, UserSpecializationUpdateSerializer, UserSkillCreateSerializer, 
+                          UserSkillUpdateSerializer, MyTokenObtainPairSerializer, PostSerializer, PostCreateSerializer, PostUpdateSerializer)
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .permissions import IsAdmin
 
@@ -151,6 +153,36 @@ class UserSkillUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
         # Фильтруем через связь со специализацией юзера
         return User_Specialization_Skill.objects.filter(user_specialization__user=self.request.user)
 
+
+
+class PostListAPIView(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    
+class MyPostsListAPIView(generics.ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # Возвращаем только посты текущего залогиненного юзера
+        return Post.objects.filter(author=self.request.user).order_by('-created_at')
+
+class PostCreateAPIView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostCreateSerializer
+    
+class PostUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
+    http_method_names = ['patch', 'delete']
+    queryset = Post.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostUpdateSerializer
+
+    def get_object(self):
+        obj = super().get_object()
+        # ГЛАВНАЯ ПРОВЕРКА:
+        if obj.author != self.request.user:
+            raise exceptions.PermissionDenied("Это не ваш пост, вы не можете его трогать!")
+        return obj
 
 # ADMIN ENDPOINTS
 

@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.conf import settings
 
 
 # Create your models here
@@ -64,3 +65,18 @@ class User_Specialization_Skill(models.Model):
         # Принудительно запускаем проверку перед сохранением
         self.full_clean()
         super().save(*args, **kwargs)
+        
+        
+class Post(models.Model):
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE, 
+        related_name='posts'
+    )
+    description = models.TextField()
+    skills_required = models.ManyToManyField('Skill', related_name='posts', verbose_name='Необходимые навыки')
+    created_at = models.DateField(auto_now_add=True)
+    contact_link = models.CharField(max_length=100, help_text="Укажите ваш телеграм или почту или телефон для связи")
+    
+    def __str__(self):
+        return f"Post {self.id}: {self.description[:30]}"

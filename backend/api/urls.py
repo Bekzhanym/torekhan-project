@@ -5,18 +5,18 @@ from .views import (UserListAPIView, UserDetailAPIView, UserDetailByUsernameAPIV
                     UserSpecializationCreateAPIView, UserSpecializationUpdateAPIView, UserSkillCreateAPIView, 
                     UserSkillUpdateAPIView, SkillsListAPIView, SpecializationsListAPIView, MyTokenObtainPairView,
                     AdminSpecializationCreateAPIView, AdminSpecializationUpdateAPIView, AdminSpecializationDeleteAPIView,
-                    AdminSkillCreateAPIView, AdminSkillUpdateAPIView, AdminSkillDeleteAPIView)
+                    AdminSkillCreateAPIView, AdminSkillUpdateAPIView, AdminSkillDeleteAPIView, PostListAPIView, PostCreateAPIView, MyPostsListAPIView, PostUpdateAPIView)
 
 urlpatterns = [
     ### AUTHENTICATION ###
     path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'), # Login (Get token)
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # Relogin (Refresh token)
-    path('users/me/', UserProfileAPIView.as_view(), name='user-profile'), # get profile / update email
     
     ### CREATE ###
     path('users/register', UserCreateAPIView.as_view(), name='user-register'),  # register
     path('users/me/add-specialization/', UserSpecializationCreateAPIView.as_view(), name='add-spec'), # add specialization
     path('users/me/add-skill/', UserSkillCreateAPIView.as_view(), name='add-skill'), # add skill
+    path('posts/add', PostCreateAPIView.as_view()), # add post
     
     ### READ ###
     path('users/', UserListAPIView.as_view(), name='user-list'), # get all users
@@ -26,10 +26,15 @@ urlpatterns = [
     path('users/by-skill/<int:skill_id>/', UsersBySkillAPIView.as_view(), name='users-by-skill'), # filter users by skill. Sorting enabled(by level, by username, by date_joined)
     path('skills/', SkillsListAPIView.as_view()), # get all skills
     path('specializations/', SpecializationsListAPIView.as_view()),  # get all specializations
+    path('posts/', PostListAPIView.as_view()), # get all posts
+    path('users/me/', UserProfileAPIView.as_view(), name='user-profile'), # get profile / update email
+    path('users/me/posts', MyPostsListAPIView.as_view()), # get ur posts
+    
     
     ### UPDATE & DELETE ###
     path('users/me/change-specialization/<int:pk>/', UserSpecializationUpdateAPIView.as_view(), name='manage-skill'), # change / delete user_skill relation
     path('users/me/change-skill/<int:pk>/', UserSkillUpdateAPIView.as_view(), name='manage-skill'), # change / delete user_skill relation
+    path('posts/<int:pk>', PostUpdateAPIView.as_view()), # change / delete ur post 
     
     ### ADMIN ENDPOINTS ###
     # Specializations management

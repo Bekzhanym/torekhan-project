@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Specialization, Skill, User_Specialization, User_Specialization_Skill
+from .models import User, Specialization, Skill, User_Specialization, User_Specialization_Skill, Post
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 ### JWT Token ###
@@ -60,6 +60,15 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'role', 'specializations']
         # Поле id обычно только для чтения
         read_only_fields = ['id', 'username', 'role']
+
+
+class PostSerializer(serializers.ModelSerializer):
+    skills_required = SkillSerializer(many=True, read_only=True)
+    author = UserSerializer()
+    class Meta:
+        model = Post
+        fields = ['id', 'author', 'description', 'skills_required', 'created_at', 'contact_link']
+
 
 
 ### CREATE UPDATE DELETE ###
@@ -163,3 +172,53 @@ class UserSkillUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_Specialization_Skill
         fields = ['user_skill_id', 'user_spec_id', 'skill_id', 'skill_name', 'level']
+        
+        
+class PostCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ['id', 'author', 'description', 'created_at', 'skills_required', 'contact_link']
+        read_only_fields = ['id', 'author', 'created_at']
+    
+    def create(self, validated_data):
+        user = self.context['request'].user
+        skills_data = validated_data.pop('skills_required', [])
+
+        post = Post.objects.create(author=user, **validated_data) # Добавляем автора
+        post.skills_required.set(skills_data)
+        return post
+    
+class PostUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ['description', 'contact_link', 'skills_required']
+
+    def update(self, instance, validated_data):
+        # 1. Получаем списки из сырых данных запроса
+        # Мы берем их из self.context['request'].data, так как этих полей нет в модели
+        request_data = self.context['request'].data
+        skills_to_add = request_data.get('skills_to_add', [])
+        skills_to_remove = request_data.get('skills_to_remove', [])
+
+        # 2. Обновляем обычные поля (description, contact_link)
+        # validated_data уже содержит проверенные данные для полей из Meta.fields
+        for attr, value in validated_data.items():
+            if attr != 'skills_required': # Скиллы обработаем отдельно
+                setattr(instance, attr, value)
+        instance.save()
+
+        # 3. Обработка добавления скиллов
+        if skills_to_add:
+            # * — это распаковка списка в аргументы для метода .add()
+            instance.skills_required.add(*skills_to_add)
+
+        # 4. Обработка удаления скиллов
+        if skills_to_remove:
+            instance.skills_required.remove(*skills_to_remove)
+
+        # 5. Если прислали стандартный skills_required, 
+        # то ведем себя как обычно (перезаписываем всё)
+        if 'skills_required' in validated_data:
+            instance.skills_required.set(validated_data['skills_required'])
+
+        return instance
