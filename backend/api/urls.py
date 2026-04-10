@@ -36,6 +36,9 @@ urlpatterns = [
     path('users/me/change-skill/<int:pk>/', UserSkillUpdateAPIView.as_view(), name='manage-skill'), # change / delete user_skill relation
     path('posts/<int:pk>', PostUpdateAPIView.as_view()), # change / delete ur post 
     
+
+
+
     ### ADMIN ENDPOINTS ###
     # Specializations management
     path('admin/specializations/create/', AdminSpecializationCreateAPIView.as_view(), name='admin-spec-create'), # create specialization
@@ -46,5 +49,4 @@ urlpatterns = [
     path('admin/skills/create/', AdminSkillCreateAPIView.as_view(), name='admin-skill-create'), # create skill
     path('admin/skills/<int:pk>/update/', AdminSkillUpdateAPIView.as_view(), name='admin-skill-update'), # update skill
     path('admin/skills/<int:pk>/delete/', AdminSkillDeleteAPIView.as_view(), name='admin-skill-delete'), # delete skill
-    
 ]

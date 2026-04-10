@@ -18,7 +18,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 
-### READ ###
 
 class SpecializationSerializer(serializers.ModelSerializer):
     class Meta:
