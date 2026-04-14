@@ -1,0 +1,80 @@
+.dashboard-page {
+  padding: 1.5rem;
+}
+
+h1 {
+  margin: 0 0 1rem;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.post-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 1rem;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 22px rgba(15, 23, 42, 0.12);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.date {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.description {
+  margin: 0 0 0.85rem;
+  color: #334155;
+  line-height: 1.4;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 1rem;
+}
+
+.skill-tag {
+  font-size: 12px;
+  padding: 0.22rem 0.6rem;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #3730a3;
+}
+
+.contact-link {
+  display: inline-block;
+  text-decoration: none;
+  color: #ffffff;
+  background: #111827;
+  border-radius: 8px;
+  padding: 0.5rem 0.85rem;
+  font-size: 13px;
+}
+
+.error {
+  color: #dc2626;
+}

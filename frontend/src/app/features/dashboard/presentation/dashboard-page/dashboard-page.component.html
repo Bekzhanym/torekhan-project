@@ -1,0 +1,36 @@
+<section class="dashboard-page">
+  <h1>Posts</h1>
+
+  @if (loading()) {
+    <p>Loading posts...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (!loading() && !error()) {
+    <div class="cards-grid">
+      @for (post of posts(); track post.id) {
+        <article class="post-card">
+          <div class="card-header">
+            <h3>{{ post.author.username }}</h3>
+            <span class="date">{{ post.created_at | date:'mediumDate' }}</span>
+          </div>
+
+          <p class="description">{{ post.description }}</p>
+
+          <div class="skills">
+            @for (skill of post.skills_required; track skill.id) {
+              <span class="skill-tag">{{ skill.name }}</span>
+            }
+          </div>
+
+          <a class="contact-link" [href]="post.contact_link" target="_blank" rel="noopener noreferrer">
+            Contact
+          </a>
+        </article>
+      }
+    </div>
+  }
+</section>
