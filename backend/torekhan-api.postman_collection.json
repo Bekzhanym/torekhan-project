@@ -67,7 +67,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"john_doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"securepass123\"\n}"
+              "raw": "{\n  \"username\": \"john_doe\",\n  \"email\": \"john@example.com\",\n  \"telegram\": \"@john_doe\",\n  \"phone_number\": \"+7 (999) 123-45-67\",\n  \"password\": \"securepass123\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/users/register",

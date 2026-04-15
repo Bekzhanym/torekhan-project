@@ -56,7 +56,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = User
-        fields = ['id', 'username', 'email', 'role', 'specializations']
+        fields = ['id', 'username', 'email', 'telegram', 'phone_number', 'role', 'specializations']
         # Поле id обычно только для чтения
         read_only_fields = ['id', 'username', 'role']
 
@@ -78,7 +78,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password']
+        fields = ['id', 'username', 'email', 'telegram', 'phone_number', 'password']
 
     def create(self, validated_data):
         # Используем специальный метод create_user, который сам захеширует пароль
@@ -86,6 +86,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data.get('email', ''),
+            telegram=validated_data.get('telegram', ''),
+            phone_number=validated_data.get('phone_number', ''),
             password=validated_data['password'],
             role='USER'
         )
