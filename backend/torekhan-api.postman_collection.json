@@ -1,0 +1,697 @@
+{
+  "info": {
+    "name": "Torekhan API",
+    "description": "API Collection for Torekhan Project - Backend endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login (Get Token)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/token/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "token", ""]
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/token/refresh/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "token", "refresh", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john_doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"securepass123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "register"]
+            }
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/?ordering=username",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", ""],
+              "query": [
+                {
+                  "key": "ordering",
+                  "value": "username",
+                  "disabled": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/id/1/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "id", "1", ""]
+            }
+          }
+        },
+        {
+          "name": "Get User by Username",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/username/john_doe/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "username", "john_doe", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Users by Specialization",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/by-specialization/1/?ordering=-specializations__level",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "by-specialization", "1", ""],
+              "query": [
+                {
+                  "key": "ordering",
+                  "value": "-specializations__level",
+                  "disabled": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Users by Skill",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/by-skill/1/?ordering=-specializations__skills__level",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "by-skill", "1", ""],
+              "query": [
+                {
+                  "key": "ordering",
+                  "value": "-specializations__skills__level",
+                  "disabled": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/me/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "me", ""]
+            }
+          }
+        },
+        {
+          "name": "Update My Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"newemail@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/me/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "me", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Specializations",
+      "item": [
+        {
+          "name": "Add Specialization",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"specialization_id\": 1,\n  \"level\": 7\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/me/add-specialization/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "me", "add-specialization", ""]
+            }
+          }
+        },
+        {
+          "name": "Update/Delete Specialization",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"level\": 8\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/me/change-specialization/1/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "me", "change-specialization", "1", ""]
+            }
+          }
+        },
+        {
+          "name": "Delete Specialization",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/me/change-specialization/1/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "me", "change-specialization", "1", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Skills",
+      "item": [
+        {
+          "name": "Add Skill",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_spec_id\": 1,\n  \"skill_id\": 1,\n  \"level\": 8\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/me/add-skill/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "me", "add-skill", ""]
+            }
+          }
+        },
+        {
+          "name": "Update/Delete Skill",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"level\": 9\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/me/change-skill/1/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "me", "change-skill", "1", ""]
+            }
+          }
+        },
+        {
+          "name": "Delete Skill",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/me/change-skill/1/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "me", "change-skill", "1", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Skills",
+      "item": [
+        {
+          "name": "Get All Skills",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/skills/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "skills", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Specializations",
+      "item": [
+        {
+          "name": "Get All Specializations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/specializations/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "specializations", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Posts",
+      "item": [
+        {
+          "name": "Get All Posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/posts/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "posts", ""]
+            }
+          }
+        },
+        {
+          "name": "Create Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Looking for a Python developer for my project\",\n  \"contact_link\": \"https://t.me/myprofile\",\n  \"skills_required\": [1, 2]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/posts/add",
+              "host": ["{{base_url}}"],
+              "path": ["api", "posts", "add"]
+            }
+          }
+        },
+        {
+          "name": "Get My Posts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/me/posts",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "me", "posts"]
+            }
+          }
+        },
+        {
+          "name": "Update Post",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Updated description\",\n  \"contact_link\": \"https://t.me/newprofile\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/posts/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "posts", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Post",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/posts/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "posts", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Applications",
+      "item": [
+        {
+          "name": "Get All Applications for Post",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/posts/1/applications",
+              "host": ["{{base_url}}"],
+              "path": ["api", "posts", "1", "applications"]
+            }
+          }
+        },
+        {
+          "name": "Create Application",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"post\": 1,\n  \"description\": \"I'm very interested in this project and have the required skills\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/application/add",
+              "host": ["{{base_url}}"],
+              "path": ["api", "application", "add"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin - Specializations",
+      "item": [
+        {
+          "name": "Create Specialization",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Frontend\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/specializations/create/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "specializations", "create", ""]
+            }
+          }
+        },
+        {
+          "name": "Update Specialization",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Frontend Development\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/specializations/1/update/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "specializations", "1", "update", ""]
+            }
+          }
+        },
+        {
+          "name": "Delete Specialization",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/specializations/1/delete/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "specializations", "1", "delete", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin - Skills",
+      "item": [
+        {
+          "name": "Create Skill",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"React\",\n  \"specialization\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/skills/create/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "skills", "create", ""]
+            }
+          }
+        },
+        {
+          "name": "Update Skill",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"React.js\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/skills/1/update/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "skills", "1", "update", ""]
+            }
+          }
+        },
+        {
+          "name": "Delete Skill",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/skills/1/delete/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "skills", "1", "delete", ""]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "username",
+      "value": "admin",
+      "type": "string"
+    },
+    {
+      "key": "password",
+      "value": "admin",
+      "type": "string"
+    }
+  ]
+}
