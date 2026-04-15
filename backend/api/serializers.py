@@ -58,7 +58,25 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'email', 'telegram', 'phone_number', 'role', 'specializations']
         # Поле id обычно только для чтения
-        read_only_fields = ['id', 'username', 'role']
+        read_only_fields = ['id', 'username', 'role', 'email']
+
+    def validate(self, attrs):
+        if self.instance:
+            # Получаем список полей, которые фронт реально прислал в запросе
+            incoming_data = self.initial_data
+            
+            for field in self.Meta.read_only_fields:
+                if field in incoming_data:
+                    # Сравниваем присланное значение с тем, что уже есть в базе
+                    new_value = incoming_data.get(field)
+                    old_value = getattr(self.instance, field)
+                    
+                    # Если значения разные — кидаем ошибку
+                    if str(new_value) != str(old_value):
+                        raise serializers.ValidationError({
+                            field: f"Поле '{field}' менять нельзя, оно только для чтения."
+                        })
+        return attrs
 
 
 class PostSerializer(serializers.ModelSerializer):
