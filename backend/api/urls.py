@@ -5,7 +5,8 @@ from .views import (UserListAPIView, UserDetailAPIView, UserDetailByUsernameAPIV
                     UserSpecializationCreateAPIView, UserSpecializationUpdateAPIView, UserSkillCreateAPIView, 
                     UserSkillUpdateAPIView, SkillsListAPIView, SpecializationsListAPIView, MyTokenObtainPairView,
                     AdminSpecializationCreateAPIView, AdminSpecializationUpdateAPIView, AdminSpecializationDeleteAPIView,
-                    AdminSkillCreateAPIView, AdminSkillUpdateAPIView, AdminSkillDeleteAPIView, PostListAPIView, PostCreateAPIView, MyPostsListAPIView, PostUpdateAPIView)
+                    AdminSkillCreateAPIView, AdminSkillUpdateAPIView, AdminSkillDeleteAPIView, PostListAPIView, PostCreateAPIView, MyPostsListAPIView, PostUpdateAPIView,
+                    ApplyCreateAPIView)
 
 urlpatterns = [
     ### AUTHENTICATION ###
@@ -17,6 +18,7 @@ urlpatterns = [
     path('users/me/add-specialization/', UserSpecializationCreateAPIView.as_view(), name='add-spec'), # add specialization
     path('users/me/add-skill/', UserSkillCreateAPIView.as_view(), name='add-skill'), # add skill
     path('posts/add', PostCreateAPIView.as_view()), # add post
+    path('application/add', ApplyCreateAPIView.as_view()),
     
     ### READ ###
     path('users/', UserListAPIView.as_view(), name='user-list'), # get all users

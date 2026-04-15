@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Specialization, Skill, User_Specialization, User_Specialization_Skill, Post
+from .models import User, Specialization, Skill, User_Specialization, User_Specialization_Skill, Post, Apply
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 ### JWT Token ###
@@ -221,3 +221,24 @@ class PostUpdateSerializer(serializers.ModelSerializer):
             instance.skills_required.set(validated_data['skills_required'])
 
         return instance
+    
+class ApplyCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Apply
+        fields = ['user', 'post', 'description']
+        read_only_fields = ['user']
+    
+    def validate(self, attrs):
+        user = self.context['request'].user
+        post = attrs.get('post')
+
+        # Проверяем, существует ли уже такая запись
+        if Apply.objects.filter(user=user, post=post).exists():
+            raise serializers.ValidationError("Вы уже подали заявку на этот пост.")
+        
+        return attrs
+    
+    def create(self, validated_data):
+        user = self.context["request"].user
+        apply = Apply.objects.create(user=user, **validated_data)
+        return apply

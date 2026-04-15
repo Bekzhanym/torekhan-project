@@ -6,7 +6,8 @@ from drf_yasg import openapi
 from .models import User, User_Specialization, User_Specialization_Skill, Skill, Specialization, Post
 from .serializers import (SpecializationSerializer, SkillSerializer, UserSerializer, UserRegisterSerializer, 
                           UserSpecializationCreateSerializer, UserSpecializationUpdateSerializer, UserSkillCreateSerializer, 
-                          UserSkillUpdateSerializer, MyTokenObtainPairSerializer, PostSerializer, PostCreateSerializer, PostUpdateSerializer)
+                          UserSkillUpdateSerializer, MyTokenObtainPairSerializer, PostSerializer, PostCreateSerializer, PostUpdateSerializer,
+                          ApplyCreateSerializer)
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .permissions import IsAdmin
 
@@ -183,6 +184,10 @@ class PostUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
         if obj.author != self.request.user:
             raise exceptions.PermissionDenied("Это не ваш пост, вы не можете его трогать!")
         return obj
+    
+class ApplyCreateAPIView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ApplyCreateSerializer
 
 # ADMIN ENDPOINTS
 
