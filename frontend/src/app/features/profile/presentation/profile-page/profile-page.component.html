@@ -1,34 +1,305 @@
 <section class="profile-page">
   <h1>Профиль</h1>
 
-  <p *ngIf="isLoading()" class="state-text">Загрузка профиля...</p>
+  <p *ngIf="isProfileLoading()" class="state-text">Загрузка профиля...</p>
   <p *ngIf="error()" class="state-text error">{{ error() }}</p>
+  <p *ngIf="actionError()" class="state-text error">{{ actionError() }}</p>
+  <p *ngIf="actionSuccess()" class="state-text success">{{ actionSuccess() }}</p>
 
   <article *ngIf="profile() as user" class="section-card">
-    <div class="info-row">
-      <div>
-        <p class="label">Username</p>
-        <p class="value">{{ user.username }}</p>
-      </div>
+    <div class="section-head">
+      <h2>Основные данные</h2>
+      <button type="button" (click)="openEditContactsModal()">Редактировать контакты</button>
     </div>
 
     <div class="info-row">
-      <div>
-        <p class="label">Электронная почта</p>
-        <p class="value">{{ user.email }}</p>
+      <p class="label">Username</p>
+      <p class="value">{{ user.username }}</p>
+    </div>
+    <div class="info-row">
+      <p class="label">Электронная почта</p>
+      <p class="value">{{ user.email }}</p>
+    </div>
+    <div class="info-row">
+      <p class="label">Telegram</p>
+      <p class="value">{{ user.telegram || 'Не указано' }}</p>
+    </div>
+    <div class="info-row">
+      <p class="label">Номер телефона</p>
+      <p class="value">{{ user.phone_number || 'Не указано' }}</p>
+    </div>
+  </article>
+
+  <ng-container *ngIf="profile() as user">
+    <article class="section-card">
+      <div class="section-head">
+        <h2>Специализации</h2>
+        <button type="button" (click)="openAddSpecializationModal()">Добавить</button>
       </div>
+      <p *ngIf="isCatalogsLoading()" class="state-text">Загрузка справочников...</p>
+
+      <div *ngFor="let spec of user.specializations" class="spec-item">
+        <div class="spec-header">
+          <p class="value">{{ spec.spec_name }} (уровень {{ spec.level }})</p>
+          <div class="inline-actions">
+            <button type="button" class="danger" [disabled]="isSaving()" (click)="deleteSpecialization(spec.user_spec_id)">
+              Удалить
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <p *ngIf="!user.specializations.length" class="state-text">Пока специализации не добавлены.</p>
+    </article>
+
+    <article class="section-card">
+      <div class="section-head">
+        <h2>Навыки</h2>
+        <button type="button" (click)="openAddSkillModal()">Добавить</button>
+      </div>
+
+      <div *ngFor="let spec of user.specializations" class="spec-item">
+        <p class="label">{{ spec.spec_name }}</p>
+        <div class="skill-item" *ngFor="let skill of spec.skills">
+          <p class="skill-text">{{ skill.skill_name }} (уровень {{ skill.level }})</p>
+          <div class="inline-actions">
+            <button type="button" (click)="openEditSkillModal(skill.user_skill_id, spec.user_spec_id, skill.skill_id, skill.level)">
+              Редактировать навык
+            </button>
+            <button type="button" class="danger" [disabled]="isSaving()" (click)="deleteSkill(skill.user_skill_id)">
+              Удалить
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <p *ngIf="!user.specializations.length" class="state-text">Сначала добавьте специализацию, затем навыки.</p>
+    </article>
+  </ng-container>
+
+  <article class="section-card">
+    <h2>Мои посты</h2>
+
+    <p *ngIf="isPostsLoading()" class="state-text">Загрузка постов...</p>
+
+    <div *ngFor="let post of myPosts()" class="post-item">
+      <p class="value">#{{ post.id }} · {{ post.created_at | date:'mediumDate' }}</p>
+      <p class="post-description">{{ post.description }}</p>
+      <p class="meta">Contact: {{ post.contact_link }}</p>
+      <p class="meta">Skills: {{ getSkillNames(post) }}</p>
+
+      <div class="inline-actions">
+        <button type="button" [disabled]="isSaving()" (click)="startEditPost(post)">Редактировать пост</button>
+        <button type="button" class="danger" [disabled]="isSaving()" (click)="deletePost(post.id)">Удалить пост</button>
+      </div>
+
+      <form
+        *ngIf="editingPostId() === post.id"
+        class="post-edit-form"
+        [formGroup]="postEditForm"
+        (ngSubmit)="updatePost(post.id)"
+      >
+        <label>Описание</label>
+        <textarea rows="4" formControlName="description"></textarea>
+
+        <label>Контакт</label>
+        <input type="text" formControlName="contactLink" />
+
+        <label>Навыки (ID через запятую)</label>
+        <input type="text" formControlName="skillIds" />
+
+        <div class="inline-actions">
+          <button type="submit" [disabled]="isSaving()">Сохранить пост</button>
+          <button type="button" [disabled]="isSaving()" (click)="cancelEditPost()">Отмена</button>
+        </div>
+      </form>
     </div>
+
+    <p *ngIf="!isPostsLoading() && !myPosts().length" class="state-text">У вас пока нет постов.</p>
   </article>
 
-  <article *ngIf="profile()?.specializations?.length" class="section-card specializations">
-    <h2>Specializations</h2>
-    <div class="spec-item" *ngFor="let spec of profile()!.specializations">
-      <p class="value">{{ spec.spec_name }} ({{ spec.level }})</p>
-    </div>
-  </article>
+  @if (activeModal()) {
+    <div class="modal-overlay" (click)="closeModal()">
+      <article class="modal-card" (click)="$event.stopPropagation()">
+        @if (activeModal() === 'add-specialization') {
+          <h3>Добавить специализацию</h3>
+          <form class="inline-form" [formGroup]="addSpecializationForm" (ngSubmit)="submitAddSpecializationModal()">
+            <label class="label">Выбор специализации</label>
+            <div class="search-dropdown">
+              <button type="button" class="dropdown-trigger" (click)="toggleSpecializationDropdown($event)">
+                {{ getSelectedSpecializationName() || 'Выберите специализацию' }}
+              </button>
+              @if (isSpecializationDropdownOpen()) {
+                <div class="dropdown-panel">
+                  <input
+                    #specializationSearchInput
+                    type="text"
+                    class="dropdown-search"
+                    placeholder="Поиск специализации"
+                    [value]="specializationSearch()"
+                    (input)="onSpecializationSearch(specializationSearchInput.value)"
+                    (click)="$event.stopPropagation()"
+                  />
+                  <div class="dropdown-options">
+                    @for (specialization of filteredSpecializations(); track specialization.id) {
+                      <button type="button" class="dropdown-option" (click)="selectSpecialization(specialization.id, $event)">
+                        {{ specialization.name }}
+                      </button>
+                    }
+                  </div>
+                  @if (!filteredSpecializations().length) {
+                    <p class="no-options">Специализации не найдены.</p>
+                  }
+                </div>
+              }
+            </div>
+            <label class="label" for="spec-level-modal">Уровень специализации (1-10)</label>
+            <input id="spec-level-modal" type="number" min="1" max="10" formControlName="level" />
+            <div class="inline-actions">
+              <button type="submit" [disabled]="isSaving() || !filteredSpecializations().length">Сохранить</button>
+              <button type="button" class="danger" (click)="closeModal()">Отмена</button>
+            </div>
+          </form>
+        }
 
-  <article *ngIf="profile() && !profile()?.specializations?.length" class="section-card specializations">
-    <h2>Specializations</h2>
-    <p class="state-text">Пока специализации не добавлены.</p>
-  </article>
+        @if (activeModal() === 'edit-contacts') {
+          <h3>Редактировать контакты</h3>
+          <form class="inline-form contact-form" [formGroup]="contactEditForm" (ngSubmit)="submitEditContactsModal()">
+            <label class="label" for="username-modal">Username</label>
+            <input id="username-modal" type="text" [value]="profile()?.username || ''" readonly />
+
+            <label class="label" for="telegram-modal">Telegram</label>
+            <input id="telegram-modal" type="text" formControlName="telegram" placeholder="@nick" />
+            <p class="field-error" *ngIf="contactEditForm.controls.telegram.touched && contactEditForm.controls.telegram.invalid">
+              Telegram должен быть не длиннее 50 символов.
+            </p>
+
+            <label class="label" for="phone-modal">Номер телефона</label>
+            <input id="phone-modal" type="text" formControlName="phoneNumber" placeholder="+7..." />
+            <p class="field-error" *ngIf="contactEditForm.controls.phoneNumber.touched && contactEditForm.controls.phoneNumber.invalid">
+              Номер должен быть не длиннее 20 символов.
+            </p>
+
+            <div class="inline-actions modal-actions">
+              <button type="submit" [disabled]="isSaving()">Сохранить</button>
+              <button type="button" class="danger" (click)="closeModal()">Отмена</button>
+            </div>
+          </form>
+        }
+
+        @if (activeModal() === 'add-skill') {
+          <h3>Добавить навык</h3>
+          <form class="inline-form" [formGroup]="addSkillForm" (ngSubmit)="submitAddSkillModal()">
+            <label class="label" for="skill-spec-select-modal">Специализация для навыка</label>
+            <select id="skill-spec-select-modal" formControlName="userSpecId" (change)="onUserSpecializationChange(+$any($event.target).value)">
+              @for (spec of profile()?.specializations ?? []; track spec.user_spec_id) {
+                <option [value]="spec.user_spec_id">{{ spec.spec_name }}</option>
+              }
+            </select>
+
+            <label class="label">Выбор навыка из списка</label>
+            <div class="search-dropdown">
+              <button type="button" class="dropdown-trigger" (click)="toggleSkillDropdown($event)">
+                {{ getSelectedSkillName() || 'Выберите навык' }}
+              </button>
+              @if (isSkillDropdownOpen()) {
+                <div class="dropdown-panel">
+                  <input
+                    #skillSearchInput
+                    type="text"
+                    class="dropdown-search"
+                    placeholder="Поиск навыка"
+                    [value]="skillSearch()"
+                    (input)="onSkillSearch(skillSearchInput.value)"
+                    (click)="$event.stopPropagation()"
+                  />
+                  <div class="dropdown-options">
+                    @for (skill of getFilteredSkills(); track skill.id) {
+                      <button type="button" class="dropdown-option" (click)="selectSkill(skill.id, $event)">
+                        {{ skill.name }}
+                      </button>
+                    }
+                  </div>
+                  @if (!getFilteredSkills().length) {
+                    <p class="no-options">Навыки не найдены.</p>
+                  }
+                </div>
+              }
+            </div>
+
+            <label class="label" for="skill-level-modal">Уровень навыка (1-10)</label>
+            <input id="skill-level-modal" type="number" min="1" max="10" formControlName="level" />
+            <div class="inline-actions">
+              <button type="submit" [disabled]="isSaving() || !getFilteredSkills().length">Сохранить</button>
+              <button type="button" class="danger" (click)="closeModal()">Отмена</button>
+            </div>
+          </form>
+        }
+
+        @if (activeModal() === 'edit-specialization-level' || activeModal() === 'edit-skill-level') {
+          <h3>
+            {{ activeModal() === 'edit-specialization-level' ? 'Изменить уровень специализации' : 'Изменить уровень навыка' }}
+          </h3>
+          <form class="inline-form" [formGroup]="editLevelForm" (ngSubmit)="submitEditLevel()">
+            <label class="label" for="edit-level-modal">Уровень (1-10)</label>
+            <input id="edit-level-modal" type="number" min="1" max="10" formControlName="level" />
+            <div class="inline-actions">
+              <button type="submit" [disabled]="isSaving()">Сохранить</button>
+              <button type="button" class="danger" (click)="closeModal()">Отмена</button>
+            </div>
+          </form>
+        }
+
+        @if (activeModal() === 'edit-skill') {
+          <h3>Редактировать навык</h3>
+          <form class="inline-form" [formGroup]="editSkillForm" (ngSubmit)="submitEditSkillModal()">
+            <label class="label" for="edit-skill-spec-select-modal">Специализация для навыка</label>
+            <select id="edit-skill-spec-select-modal" formControlName="userSpecId" [disabled]="true">
+              @for (spec of profile()?.specializations ?? []; track spec.user_spec_id) {
+                <option [value]="spec.user_spec_id">{{ spec.spec_name }}</option>
+              }
+            </select>
+
+            <label class="label">Навык</label>
+            <div class="search-dropdown">
+              <button type="button" class="dropdown-trigger" (click)="toggleEditSkillDropdown($event)">
+                {{ getSelectedEditSkillName() || 'Выберите навык' }}
+              </button>
+              @if (isEditSkillDropdownOpen()) {
+                <div class="dropdown-panel">
+                  <input
+                    #editSkillSearchInput
+                    type="text"
+                    class="dropdown-search"
+                    placeholder="Поиск навыка"
+                    [value]="editSkillSearch()"
+                    (input)="onEditSkillSearch(editSkillSearchInput.value)"
+                    (click)="$event.stopPropagation()"
+                  />
+                  <div class="dropdown-options">
+                    @for (skill of getFilteredEditSkills(); track skill.id) {
+                      <button type="button" class="dropdown-option" (click)="selectEditSkill(skill.id, $event)">
+                        {{ skill.name }}
+                      </button>
+                    }
+                  </div>
+                  @if (!getFilteredEditSkills().length) {
+                    <p class="no-options">Навыки не найдены.</p>
+                  }
+                </div>
+              }
+            </div>
+
+            <label class="label" for="edit-skill-level-modal">Уровень навыка (1-10)</label>
+            <input id="edit-skill-level-modal" type="number" min="1" max="10" formControlName="level" />
+
+            <div class="inline-actions">
+              <button type="submit" [disabled]="isSaving() || !getFilteredEditSkills().length">Сохранить</button>
+              <button type="button" class="danger" (click)="closeModal()">Отмена</button>
+            </div>
+          </form>
+        }
+      </article>
+    </div>
+  }
 </section>
