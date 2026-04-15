@@ -15,13 +15,17 @@
   }
 
   @if (showForm()) {
-    <app-post-form
-      [mode]="formMode()"
-      [initialValue]="editedInitialValue()"
-      [isSaving]="isSaving()"
-      (submitted)="submitPostForm($event)"
-      (cancelled)="closeForm()"
-    />
+    <div class="sheet-overlay" (click)="closeForm()">
+      <div class="sheet-container" (click)="$event.stopPropagation()">
+        <app-post-form
+          [mode]="formMode()"
+          [initialValue]="editedInitialValue()"
+          [isSaving]="isSaving()"
+          (submitted)="submitPostForm($event)"
+          (cancelled)="closeForm()"
+        />
+      </div>
+    </div>
   }
 
   @if (loading()) {

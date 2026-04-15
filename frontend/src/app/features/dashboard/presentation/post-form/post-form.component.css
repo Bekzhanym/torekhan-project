@@ -1,9 +1,12 @@
 .post-form-card {
   border: 1px solid #dbe3ef;
-  border-radius: 14px;
+  border-radius: 18px;
   background: #ffffff;
-  padding: 16px;
-  margin-bottom: 18px;
+  padding: 18px;
+  margin-bottom: 0;
+  max-height: calc(100vh - 24px);
+  overflow: auto;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.28);
 }
 
 h2 {
