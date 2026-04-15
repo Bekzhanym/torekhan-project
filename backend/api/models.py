@@ -14,8 +14,8 @@ class User(AbstractUser):
     
     email = models.EmailField(unique=True)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='USER')
-    telegram = models.CharField(max_length=50, help_text="Telegram ник в формате @nick", null=True, blank=True)
-    phone_number = models.CharField(max_length=20, null=True, blank=True)
+    telegram = models.CharField(max_length=50, unique=True, help_text="Telegram ник в формате @nick", null=True, blank=True)
+    phone_number = models.CharField(max_length=20, unique=True, null=True, blank=True)
 
     def __str__(self):
         return self.username
