@@ -1,0 +1,38 @@
+<article class="post-form-card">
+  <h2>{{ mode === 'create' ? 'Создать пост' : 'Редактировать пост' }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label for="description">Описание</label>
+    <textarea
+      id="description"
+      rows="5"
+      formControlName="description"
+      placeholder="Опишите задачу, кого ищете и условия"
+    ></textarea>
+    <p class="field-error" *ngIf="form.controls.description.touched && form.controls.description.invalid">
+      Описание обязательно.
+    </p>
+
+    <label for="contactLink">Контакт для связи</label>
+    <input
+      id="contactLink"
+      type="text"
+      formControlName="contactLink"
+      placeholder="@telegram / email / phone"
+    />
+    <p class="field-error" *ngIf="form.controls.contactLink.touched && form.controls.contactLink.invalid">
+      Укажите контакт (до 100 символов).
+    </p>
+
+    <label for="skillIds">ID навыков (через запятую)</label>
+    <input id="skillIds" type="text" formControlName="skillIds" placeholder="1, 2, 7" />
+    <p class="field-error" *ngIf="form.controls.skillIds.touched && form.controls.skillIds.invalid">
+      Введите хотя бы один корректный числовой ID навыка.
+    </p>
+
+    <div class="actions">
+      <button type="submit" [disabled]="isSaving">{{ isSaving ? 'Сохраняем...' : 'Сохранить' }}</button>
+      <button class="ghost" type="button" [disabled]="isSaving" (click)="cancel()">Отмена</button>
+    </div>
+  </form>
+</article>

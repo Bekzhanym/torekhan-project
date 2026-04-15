@@ -6,6 +6,7 @@ export const API_ENDPOINTS = {
   register: '/api/users/register',
   usersMe: '/api/users/me/',
   posts: '/api/posts/',
+  postsAdd: '/api/posts/add',
   services: '/api/services',
   bookings: '/api/bookings',
   reviews: '/api/reviews',

@@ -1,5 +1,28 @@
 <section class="dashboard-page">
-  <h1>Posts</h1>
+  <div class="page-header">
+    <h1>Posts</h1>
+    <button type="button" class="create-btn" (click)="openCreateForm()" [disabled]="isSaving()">
+      Создать пост
+    </button>
+  </div>
+
+  @if (actionError()) {
+    <p class="error">{{ actionError() }}</p>
+  }
+
+  @if (actionSuccess()) {
+    <p class="success">{{ actionSuccess() }}</p>
+  }
+
+  @if (showForm()) {
+    <app-post-form
+      [mode]="formMode()"
+      [initialValue]="editedInitialValue()"
+      [isSaving]="isSaving()"
+      (submitted)="submitPostForm($event)"
+      (cancelled)="closeForm()"
+    />
+  }
 
   @if (loading()) {
     <p>Loading posts...</p>
@@ -14,21 +37,32 @@
       @for (post of posts(); track post.id) {
         <article class="post-card">
           <div class="card-header">
-            <h3>{{ post.author.username }}</h3>
+            <div>
+              <h3>{{ post.author.username }}</h3>
+              <p class="author-email">{{ post.author.email }}</p>
+            </div>
             <span class="date">{{ post.created_at | date:'mediumDate' }}</span>
           </div>
 
+          <p class="post-id">#{{ post.id }}</p>
           <p class="description">{{ post.description }}</p>
 
           <div class="skills">
             @for (skill of post.skills_required; track skill.id) {
-              <span class="skill-tag">{{ skill.name }}</span>
+              <span class="skill-tag">{{ skill.name }} (ID: {{ skill.id }})</span>
             }
           </div>
 
-          <a class="contact-link" [href]="post.contact_link" target="_blank" rel="noopener noreferrer">
-            Contact
-          </a>
+          <p class="contact"><strong>Contact:</strong> {{ post.contact_link }}</p>
+
+          <div class="card-actions">
+            <button type="button" class="secondary-btn" (click)="openEditForm(post)" [disabled]="isSaving()">
+              Редактировать
+            </button>
+            <button type="button" class="danger-btn" (click)="deletePost(post.id)" [disabled]="isSaving()">
+              Удалить
+            </button>
+          </div>
         </article>
       }
     </div>
