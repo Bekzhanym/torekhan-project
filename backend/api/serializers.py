@@ -242,3 +242,12 @@ class ApplyCreateSerializer(serializers.ModelSerializer):
         user = self.context["request"].user
         apply = Apply.objects.create(user=user, **validated_data)
         return apply
+
+class ApplicationSerializer(serializers.ModelSerializer):
+    """Serializer для получения информации о заявке с полной информацией об юзере"""
+    user = UserSerializer(read_only=True)
+    post = serializers.IntegerField(source='post.id', read_only=True)
+    
+    class Meta:
+        model = Apply
+        fields = ['user', 'post', 'description']

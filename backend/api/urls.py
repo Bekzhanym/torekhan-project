@@ -6,7 +6,7 @@ from .views import (UserListAPIView, UserDetailAPIView, UserDetailByUsernameAPIV
                     UserSkillUpdateAPIView, SkillsListAPIView, SpecializationsListAPIView, MyTokenObtainPairView,
                     AdminSpecializationCreateAPIView, AdminSpecializationUpdateAPIView, AdminSpecializationDeleteAPIView,
                     AdminSkillCreateAPIView, AdminSkillUpdateAPIView, AdminSkillDeleteAPIView, PostListAPIView, PostCreateAPIView, MyPostsListAPIView, PostUpdateAPIView,
-                    ApplyCreateAPIView)
+                    ApplyCreateAPIView, PostApplicationsListAPIView)
 
 urlpatterns = [
     ### AUTHENTICATION ###
@@ -29,6 +29,7 @@ urlpatterns = [
     path('skills/', SkillsListAPIView.as_view()), # get all skills
     path('specializations/', SpecializationsListAPIView.as_view()),  # get all specializations
     path('posts/', PostListAPIView.as_view()), # get all posts
+    path('posts/<int:post_id>/applications', PostApplicationsListAPIView.as_view()), # get all applications for a post
     path('users/me/', UserProfileAPIView.as_view(), name='user-profile'), # get profile / update email
     path('users/me/posts', MyPostsListAPIView.as_view()), # get ur posts
     

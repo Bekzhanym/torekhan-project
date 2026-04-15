@@ -3,8 +3,8 @@ from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from .models import User, User_Specialization, User_Specialization_Skill, Skill, Specialization, Post
-from .serializers import (SpecializationSerializer, SkillSerializer, UserSerializer, UserRegisterSerializer, 
+from .models import Apply, User, User_Specialization, User_Specialization_Skill, Skill, Specialization, Post
+from .serializers import (ApplicationSerializer, SpecializationSerializer, SkillSerializer, UserSerializer, UserRegisterSerializer, 
                           UserSpecializationCreateSerializer, UserSpecializationUpdateSerializer, UserSkillCreateSerializer, 
                           UserSkillUpdateSerializer, MyTokenObtainPairSerializer, PostSerializer, PostCreateSerializer, PostUpdateSerializer,
                           ApplyCreateSerializer)
@@ -188,6 +188,14 @@ class PostUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
 class ApplyCreateAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ApplyCreateSerializer
+
+class PostApplicationsListAPIView(generics.ListAPIView):
+    """Получить все заявки на конкретный пост с полной информацией об юзерах"""
+    serializer_class = ApplicationSerializer
+    
+    def get_queryset(self):
+        post_id = self.kwargs['post_id']
+        return Apply.objects.filter(post_id=post_id).select_related('user', 'post')
 
 # ADMIN ENDPOINTS
 
