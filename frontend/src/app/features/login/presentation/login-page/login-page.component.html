@@ -1,0 +1,64 @@
+<section class="login-page">
+  <div class="dialog" aria-labelledby="login-title">
+    <div class="header-icon" aria-hidden="true">
+      <img src="/assets/icons/team-find.png" alt="team-find logo" />
+    </div>
+
+    <h2 id="login-title">{{ mode() === 'login' ? 'Қош келдіңіз' : 'Қолданба ашу' }}</h2>
+    <p class="description">
+      {{ mode() === 'login' ? 'Қолданбаға кіру үшін логин жазыңыз.' : 'Регистрация үшін форманы толтырыңыз.' }}
+    </p>
+
+    <div class="mode-switch">
+      <button type="button" [class.active]="mode() === 'login'" (click)="setMode('login')">Кіру</button>
+      <button type="button" [class.active]="mode() === 'register'" (click)="setMode('register')">Тіркелу</button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="field">
+        <label for="username">Логин</label>
+        <input id="username" type="text" formControlName="username" placeholder="Логиніңізді енгізіңіз" />
+        @if (form.controls.username.invalid && form.controls.username.touched) {
+          <small class="field-error">Логин міндетті.</small>
+        }
+      </div>
+
+      @if (mode() === 'register') {
+        <div class="field">
+          <label for="email">Пошта</label>
+          <input id="email" type="email" formControlName="email" placeholder="Поштаныңызды енгізіңіз" />
+          @if ((form.controls.email.invalid || !form.controls.email.value) && form.controls.email.touched) {
+            <small class="field-error">Дұрыс электрондық пошта жазыңыз.</small>
+          }
+        </div>
+      }
+
+      <div class="field">
+        <label for="password">Құпия сөз</label>
+        <input id="password" type="password" formControlName="password" placeholder="Құпия сөзіңізді енгізіңіз" />
+        @if (form.controls.password.invalid && form.controls.password.touched) {
+          <small class="field-error">Пароль 6 таңбадан кем болмауы тиіс.</small>
+        }
+      </div>
+
+      <div class="meta-row">
+        <label class="checkbox">
+          <input type="checkbox" formControlName="rememberMe" />
+          <span>Мені сақтау</span>
+        </label>
+      </div>
+
+      @if (error()) {
+        <p class="error">{{ error() }}</p>
+      }
+
+      @if (success()) {
+        <p class="success">{{ success() }}</p>
+      }
+
+      <button class="submit-btn" type="submit" [disabled]="isLoading()">
+        {{ isLoading() ? (mode() === 'login' ? 'Signing in...' : 'Registering...') : (mode() === 'login' ? 'Sign in' : 'Register') }}
+      </button>
+    </form>
+  </div>
+</section>

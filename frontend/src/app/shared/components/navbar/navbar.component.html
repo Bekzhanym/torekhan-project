@@ -1,0 +1,27 @@
+<header class="header">
+  <div class="header-inner">
+    <nav class="nav-left" aria-label="Main navigation">
+      <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Посттар</a>
+    </nav>
+
+    <div class="nav-right">
+      <button type="button" class="ghost-btn">Поиск</button>
+      <button type="button" class="ghost-btn">Город</button>
+      <button type="button" class="icon-btn" aria-label="Сообщения"></button>
+      <button type="button" class="icon-btn" aria-label="Избранное">♡</button>
+      <button type="button" class="cta-btn">Создать резюме</button>
+
+      <div class="menu-wrapper" (click)="onMenuClick($event)">
+        <button type="button" class="icon-btn" aria-label="Меню" (click)="toggleMenu($event)">☰</button>
+
+        @if (isMenuOpen()) {
+          <div class="menu-panel">
+            <button type="button" class="menu-item" (click)="closeMenu()">Настройки</button>
+            <button type="button" class="menu-item" routerLink="/profile" (click)="closeMenu()">Профиль</button>
+            <button type="button" class="menu-item logout" (click)="logout()">Выйти из аккаунта</button>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</header>
