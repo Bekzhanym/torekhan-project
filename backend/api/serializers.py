@@ -104,8 +104,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data.get('email', ''),
-            telegram=validated_data.get('telegram', ''),
-            phone_number=validated_data.get('phone_number', ''),
+            telegram=validated_data.get('telegram'),
+            phone_number=validated_data.get('phone_number'),
             password=validated_data['password'],
             role='USER'
         )

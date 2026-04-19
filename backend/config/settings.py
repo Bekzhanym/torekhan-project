@@ -130,11 +130,6 @@ USE_I18N = True
 USE_TZ = True
 
 
-
-
-
-
-
 AUTH_USER_MODEL = 'api.User'
 CSRF_TRUSTED_ORIGINS = ['https://team-find.xyz']
 CORS_ALLOW_ALL_ORIGINS = True  

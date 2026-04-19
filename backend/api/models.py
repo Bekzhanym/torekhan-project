@@ -6,6 +6,13 @@ from django.conf import settings
 
 
 # Create your models here
+def _blank_to_none(value):
+    if value is None:
+        return None
+    stripped = str(value).strip()
+    return stripped if stripped else None
+
+
 class User(AbstractUser):
     ROLE_CHOICES = [
         ('USER', 'User'),
@@ -16,6 +23,11 @@ class User(AbstractUser):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='USER')
     telegram = models.CharField(max_length=50, unique=True, help_text="Telegram ник в формате @nick", null=True, blank=True)
     phone_number = models.CharField(max_length=20, unique=True, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.telegram = _blank_to_none(self.telegram)
+        self.phone_number = _blank_to_none(self.phone_number)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.username
