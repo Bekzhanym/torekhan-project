@@ -2,12 +2,13 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
 
-import { PostFormComponent, PostFormValue } from '../post-form/post-form.component';
+import { PostFormComponent, PostFormValue, SkillOption } from '../post-form/post-form.component';
 import { API_BASE_URL, API_ENDPOINTS } from '../../../../shared/constants/api.constants';
 
 interface Skill {
   id: number;
   name: string;
+  specialization?: number;
 }
 
 interface User {
@@ -41,6 +42,9 @@ export class DashboardPageComponent implements OnInit {
   readonly error = signal<string | null>(null);
   readonly actionError = signal<string | null>(null);
   readonly actionSuccess = signal<string | null>(null);
+  readonly skills = signal<SkillOption[]>([]);
+  readonly skillsLoading = signal(false);
+  readonly skillsError = signal<string | null>(null);
 
   readonly showForm = signal(false);
   readonly formMode = signal<'create' | 'edit'>('create');
@@ -48,7 +52,31 @@ export class DashboardPageComponent implements OnInit {
   readonly editedInitialValue = signal<PostFormValue | null>(null);
 
   ngOnInit(): void {
+    this.loadSkills();
     this.loadPosts();
+  }
+
+  loadSkills(): void {
+    this.skillsLoading.set(true);
+    this.skillsError.set(null);
+
+    this.http.get<Skill[]>(`${API_BASE_URL}${API_ENDPOINTS.skills}`).subscribe({
+      next: (response) => {
+        this.skills.set(
+          response
+            .map((skill) => ({
+              id: skill.id,
+              name: skill.name,
+            }))
+            .sort((a, b) => a.name.localeCompare(b.name)),
+        );
+        this.skillsLoading.set(false);
+      },
+      error: () => {
+        this.skillsError.set('Не удалось загрузить список навыков.');
+        this.skillsLoading.set(false);
+      },
+    });
   }
 
   loadPosts(): void {

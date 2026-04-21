@@ -24,10 +24,27 @@
       Укажите контакт (до 100 символов).
     </p>
 
-    <label for="skillIds">ID навыков (через запятую)</label>
-    <input id="skillIds" type="text" formControlName="skillIds" placeholder="1, 2, 7" />
+    <label>Навыки</label>
+    @if (isSkillsLoading) {
+      <p class="skills-hint">Загружаем навыки...</p>
+    } @else if (skillsError) {
+      <p class="field-error">{{ skillsError }}</p>
+    } @else {
+      <div class="skills-picker">
+        @for (skill of skills; track skill.id) {
+          <label class="skill-option">
+            <input
+              type="checkbox"
+              [checked]="isSkillSelected(skill.id)"
+              (change)="toggleSkill(skill.id, $any($event.target).checked)"
+            />
+            <span>{{ skill.name }}</span>
+          </label>
+        }
+      </div>
+    }
     <p class="field-error" *ngIf="form.controls.skillIds.touched && form.controls.skillIds.invalid">
-      Введите хотя бы один корректный числовой ID навыка.
+      Выберите хотя бы один навык.
     </p>
 
     <div class="actions">

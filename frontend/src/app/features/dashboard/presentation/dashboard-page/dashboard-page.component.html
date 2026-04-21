@@ -21,6 +21,9 @@
           [mode]="formMode()"
           [initialValue]="editedInitialValue()"
           [isSaving]="isSaving()"
+          [skills]="skills()"
+          [isSkillsLoading]="skillsLoading()"
+          [skillsError]="skillsError()"
           (submitted)="submitPostForm($event)"
           (cancelled)="closeForm()"
         />
@@ -53,7 +56,7 @@
 
           <div class="skills">
             @for (skill of post.skills_required; track skill.id) {
-              <span class="skill-tag">{{ skill.name }} (ID: {{ skill.id }})</span>
+              <span class="skill-tag">{{ skill.name }}</span>
             }
           </div>
 

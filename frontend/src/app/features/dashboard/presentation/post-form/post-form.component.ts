@@ -8,6 +8,11 @@ export interface PostFormValue {
   skills_required: number[];
 }
 
+export interface SkillOption {
+  id: number;
+  name: string;
+}
+
 @Component({
   selector: 'app-post-form',
   imports: [CommonModule, ReactiveFormsModule],
@@ -20,6 +25,9 @@ export class PostFormComponent implements OnChanges {
   @Input() mode: 'create' | 'edit' = 'create';
   @Input() initialValue: PostFormValue | null = null;
   @Input() isSaving = false;
+  @Input() skills: SkillOption[] = [];
+  @Input() isSkillsLoading = false;
+  @Input() skillsError: string | null = null;
 
   @Output() readonly submitted = new EventEmitter<PostFormValue>();
   @Output() readonly cancelled = new EventEmitter<void>();
@@ -27,7 +35,7 @@ export class PostFormComponent implements OnChanges {
   readonly form = this.formBuilder.nonNullable.group({
     description: ['', [Validators.required]],
     contactLink: ['', [Validators.required, Validators.maxLength(100)]],
-    skillIds: ['', [Validators.required]],
+    skillIds: this.formBuilder.nonNullable.control<number[]>([], [Validators.required]),
   });
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -35,7 +43,7 @@ export class PostFormComponent implements OnChanges {
       this.form.setValue({
         description: this.initialValue.description,
         contactLink: this.initialValue.contact_link,
-        skillIds: this.initialValue.skills_required.join(', '),
+        skillIds: [...this.initialValue.skills_required],
       });
       this.form.markAsPristine();
     }
@@ -44,9 +52,23 @@ export class PostFormComponent implements OnChanges {
       this.form.reset({
         description: '',
         contactLink: '',
-        skillIds: '',
+        skillIds: [],
       });
     }
+  }
+
+  isSkillSelected(skillId: number): boolean {
+    return this.form.controls.skillIds.value.includes(skillId);
+  }
+
+  toggleSkill(skillId: number, checked: boolean): void {
+    const selectedSkillIds = this.form.controls.skillIds.value;
+    const nextValue = checked
+      ? Array.from(new Set([...selectedSkillIds, skillId]))
+      : selectedSkillIds.filter((id) => id !== skillId);
+    this.form.controls.skillIds.setValue(nextValue);
+    this.form.controls.skillIds.markAsTouched();
+    this.form.controls.skillIds.updateValueAndValidity();
   }
 
   submit(): void {
@@ -56,21 +78,11 @@ export class PostFormComponent implements OnChanges {
     }
 
     const raw = this.form.getRawValue();
-    const parsedSkillIds = raw.skillIds
-      .split(',')
-      .map((id) => Number(id.trim()))
-      .filter((id) => Number.isInteger(id) && id > 0);
-
-    if (!parsedSkillIds.length) {
-      this.form.controls.skillIds.setErrors({ invalidIds: true });
-      this.form.controls.skillIds.markAsTouched();
-      return;
-    }
 
     this.submitted.emit({
       description: raw.description.trim(),
       contact_link: raw.contactLink.trim(),
-      skills_required: [...new Set(parsedSkillIds)],
+      skills_required: raw.skillIds,
     });
   }
 
