@@ -62,6 +62,8 @@ h1 {
 
 .inline-form {
   margin-bottom: 14px;
+  display: grid;
+  gap: 12px;
 }
 
 .inline-actions {
@@ -133,7 +135,7 @@ button.danger {
   top: calc(100% + 6px);
   left: 0;
   right: 0;
-  z-index: 30;
+  z-index: 1400;
   border: 1px solid #cbd5e1;
   border-radius: 12px;
   background: #ffffff;
@@ -143,6 +145,7 @@ button.danger {
 
 .dropdown-search {
   width: 100%;
+  box-sizing: border-box;
   margin-bottom: 8px;
 }
 
@@ -271,7 +274,7 @@ button.danger {
 .modal-card {
   width: min(560px, 100%);
   max-height: calc(100vh - 24px);
-  overflow: auto;
+  overflow: visible;
   border: 1px solid #d9dee7;
   border-radius: 16px;
   background: #ffffff;
