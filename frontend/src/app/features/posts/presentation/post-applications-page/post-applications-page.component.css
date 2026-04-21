@@ -60,23 +60,20 @@ h2 {
   line-height: 1.45;
 }
 
-.raw-json {
-  margin-top: 0.8rem;
+.skills-section {
+  margin-top: 0.45rem;
 }
 
-.raw-json summary {
-  cursor: pointer;
+.skills-title {
+  margin-top: 0.35rem;
+}
+
+.specialization-name {
+  margin-top: 0.45rem;
+  font-weight: 600;
   color: #334155;
-  font-size: 13px;
 }
 
-.raw-json pre {
-  margin: 0.5rem 0 0;
-  padding: 10px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  overflow: auto;
-  font-size: 12px;
-  line-height: 1.4;
+.skill-line {
+  margin-left: 0.5rem;
 }

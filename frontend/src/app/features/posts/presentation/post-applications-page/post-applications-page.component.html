@@ -20,18 +20,26 @@
             <h2>{{ application.user.username }}</h2>
             <p class="meta">{{ application.user.email }}</p>
             <p class="meta">Роль: {{ application.user.role || 'Не указана' }}</p>
-            <p class="meta">ID поста: {{ application.post }}</p>
             <p class="meta">Telegram: {{ application.user.telegram || 'Не указан' }}</p>
             <p class="meta">Телефон: {{ application.user.phone_number || 'Не указан' }}</p>
-            <p class="meta">
-              Специализации:
-              {{ application.user.specializations?.length ? (application.user.specializations | json) : 'Нет' }}
-            </p>
+            <div class="skills-section">
+              <p class="meta skills-title">Специализации и навыки:</p>
+              @if (!application.user.specializations?.length) {
+                <p class="meta">Нет специализаций</p>
+              } @else {
+                @for (specialization of application.user.specializations; track specialization.user_spec_id) {
+                  <p class="meta specialization-name">{{ specialization.spec_name }} — уровень {{ specialization.level }}</p>
+                  @if (specialization.skills.length) {
+                    @for (skill of specialization.skills; track skill.user_skill_id) {
+                      <p class="meta skill-line">{{ skill.skill_name }} — уровень {{ skill.level }}</p>
+                    }
+                  } @else {
+                    <p class="meta skill-line">Навыков пока нет</p>
+                  }
+                }
+              }
+            </div>
             <p class="description">{{ application.description }}</p>
-            <details class="raw-json">
-              <summary>Показать полный JSON заявки</summary>
-              <pre>{{ application | json }}</pre>
-            </details>
           </article>
         }
       </div>

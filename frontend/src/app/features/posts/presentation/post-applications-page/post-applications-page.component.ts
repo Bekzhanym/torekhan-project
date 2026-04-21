@@ -12,7 +12,22 @@ interface ApplicantUser {
   telegram?: string | null;
   phone_number?: string | null;
   role?: string;
-  specializations?: unknown[];
+  specializations?: ApplicantSpecialization[];
+}
+
+interface ApplicantSkill {
+  skill_id: number;
+  skill_name: string;
+  user_skill_id: number;
+  level: number;
+}
+
+interface ApplicantSpecialization {
+  spec_id: number;
+  spec_name: string;
+  user_spec_id: number;
+  level: number;
+  skills: ApplicantSkill[];
 }
 
 interface PostApplication {
