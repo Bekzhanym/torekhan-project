@@ -98,6 +98,40 @@ input[type='password'] {
   box-sizing: border-box;
 }
 
+.password-field {
+  position: relative;
+}
+
+.password-field input[type='text'],
+.password-field input[type='password'] {
+  padding-right: 44px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 4px;
+  display: grid;
+  place-items: center;
+  color: #64748b;
+  border-radius: 8px;
+}
+
+.password-toggle:hover {
+  color: #334155;
+  background: rgba(15, 23, 42, 0.06);
+}
+
+.password-toggle:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
 input:focus {
   border-color: #6366f1;
 }

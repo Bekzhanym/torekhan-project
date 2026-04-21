@@ -22,6 +22,7 @@ export class LoginPageComponent {
   readonly mode = signal<'login' | 'register'>('login');
   readonly error = signal<string | null>(null);
   readonly success = signal<string | null>(null);
+  readonly passwordVisible = signal(false);
 
   readonly form = this.formBuilder.nonNullable.group({
     username: ['', [Validators.required]],
@@ -34,8 +35,13 @@ export class LoginPageComponent {
     this.mode.set(mode);
     this.error.set(null);
     this.success.set(null);
+    this.passwordVisible.set(false);
     this.form.controls.password.reset('');
     this.form.controls.rememberMe.reset(false);
+  }
+
+  togglePasswordVisible(): void {
+    this.passwordVisible.update((v) => !v);
   }
 
   submit(): void {
