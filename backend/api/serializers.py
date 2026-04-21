@@ -84,7 +84,7 @@ class PostSerializer(serializers.ModelSerializer):
     author = UserSerializer()
     class Meta:
         model = Post
-        fields = ['id', 'author', 'description', 'skills_required', 'created_at', 'contact_link']
+        fields = ['id', 'author', 'title', 'description', 'skills_required', 'created_at', 'contact_link']
 
 
 
@@ -196,7 +196,7 @@ class UserSkillUpdateSerializer(serializers.ModelSerializer):
 class PostCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['id', 'author', 'description', 'created_at', 'skills_required', 'contact_link']
+        fields = ['id', 'author', 'title', 'description', 'created_at', 'skills_required', 'contact_link']
         read_only_fields = ['id', 'author', 'created_at']
     
     def create(self, validated_data):
@@ -210,7 +210,7 @@ class PostCreateSerializer(serializers.ModelSerializer):
 class PostUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['description', 'contact_link', 'skills_required']
+        fields = ['title', 'description', 'contact_link', 'skills_required']
 
     def update(self, instance, validated_data):
         # 1. Получаем списки из сырых данных запроса
@@ -219,7 +219,7 @@ class PostUpdateSerializer(serializers.ModelSerializer):
         skills_to_add = request_data.get('skills_to_add', [])
         skills_to_remove = request_data.get('skills_to_remove', [])
 
-        # 2. Обновляем обычные поля (description, contact_link)
+        # 2. Обновляем обычные поля (title, description, contact_link)
         # validated_data уже содержит проверенные данные для полей из Meta.fields
         for attr, value in validated_data.items():
             if attr != 'skills_required': # Скиллы обработаем отдельно

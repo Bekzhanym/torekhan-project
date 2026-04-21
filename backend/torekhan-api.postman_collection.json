@@ -395,6 +395,18 @@
           }
         },
         {
+          "name": "Search Posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/posts/search/python",
+              "host": ["{{base_url}}"],
+              "path": ["api", "posts", "search", "python"]
+            }
+          }
+        },
+        {
           "name": "Create Post",
           "request": {
             "method": "POST",

@@ -1,6 +1,7 @@
 from rest_framework import generics, exceptions
 from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated
+from django.db.models import Q
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from .models import Apply, User, User_Specialization, User_Specialization_Skill, Skill, Specialization, Post
@@ -159,6 +160,16 @@ class UserSkillUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
 class PostListAPIView(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+
+class PostSearchAPIView(generics.ListAPIView):
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        text = self.kwargs['text']
+        return Post.objects.filter(
+            Q(title__icontains=text) | Q(description__icontains=text)
+        ).distinct()
     
 class MyPostsListAPIView(generics.ListAPIView):
     serializer_class = PostSerializer

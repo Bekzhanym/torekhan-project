@@ -87,13 +87,14 @@ class Post(models.Model):
         on_delete=models.CASCADE, 
         related_name='posts'
     )
+    title = models.CharField(max_length=255)
     description = models.TextField()
     skills_required = models.ManyToManyField('Skill', related_name='posts', verbose_name='Необходимые навыки')
     created_at = models.DateField(auto_now_add=True)
     contact_link = models.CharField(max_length=100, help_text="Укажите ваш телеграм или почту или телефон для связи")
     
     def __str__(self):
-        return f"Post {self.id}: {self.description[:30]}"
+        return f"Post {self.id}: {self.title[:30]}"
     
 class Apply(models.Model):
     user = models.ForeignKey(
