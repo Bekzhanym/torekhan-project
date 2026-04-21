@@ -1,0 +1,61 @@
+.post-applications-page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+h1 {
+  margin: 0 0 1rem;
+  font-size: 28px;
+}
+
+.state-text {
+  margin: 0.75rem 0;
+}
+
+.error {
+  color: #dc2626;
+}
+
+.applications-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.application-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 14px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+}
+
+h2 {
+  margin: 0 0 0.35rem;
+  font-size: 18px;
+}
+
+.meta {
+  margin: 0.2rem 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.description {
+  margin: 0.7rem 0 0;
+  color: #0f172a;
+  line-height: 1.45;
+}

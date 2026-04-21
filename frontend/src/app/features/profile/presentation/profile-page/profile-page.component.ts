@@ -566,6 +566,10 @@ export class ProfilePageComponent implements OnInit {
     this.router.navigate(['/posts', postId], { queryParams: { from: 'profile' } });
   }
 
+  openPostApplications(postId: number): void {
+    this.router.navigate(['/posts', postId, 'applications']);
+  }
+
   getSkillNames(post: ProfilePost): string {
     if (!post.skills_required.length) {
       return 'Нет';

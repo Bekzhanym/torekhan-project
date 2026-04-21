@@ -245,6 +245,12 @@ button.danger {
   font-size: 12px;
 }
 
+.post-applications-btn {
+  padding: 6px 10px;
+  font-size: 12px;
+  background: #1d4ed8;
+}
+
 .post-edit-form {
   margin-top: 10px;
   display: grid;

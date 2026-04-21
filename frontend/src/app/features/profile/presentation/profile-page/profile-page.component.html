@@ -98,6 +98,14 @@
       <div class="inline-actions post-actions">
         <button
           type="button"
+          class="post-applications-btn"
+          [disabled]="isSaving()"
+          (click)="$event.stopPropagation(); openPostApplications(post.id)"
+        >
+          Заявки
+        </button>
+        <button
+          type="button"
           class="post-edit-btn"
           [disabled]="isSaving()"
           (click)="$event.stopPropagation(); startEditPost(post)"

@@ -1,0 +1,30 @@
+<section class="post-applications-page">
+  <a class="back-link" routerLink="/profile">← Назад в профиль</a>
+  <h1>Заявки на пост #{{ postId() }}</h1>
+
+  @if (loading()) {
+    <p class="state-text">Загрузка заявок...</p>
+  }
+
+  @if (error()) {
+    <p class="state-text error">{{ error() }}</p>
+  }
+
+  @if (!loading() && !error()) {
+    @if (!applications().length) {
+      <p class="state-text">Пока заявок нет.</p>
+    } @else {
+      <div class="applications-grid">
+        @for (application of applications(); track $index) {
+          <article class="application-card">
+            <h2>{{ application.user.username }}</h2>
+            <p class="meta">{{ application.user.email }}</p>
+            <p class="meta">Telegram: {{ application.user.telegram || 'Не указан' }}</p>
+            <p class="meta">Телефон: {{ application.user.phone_number || 'Не указан' }}</p>
+            <p class="description">{{ application.description }}</p>
+          </article>
+        }
+      </div>
+    }
+  }
+</section>
