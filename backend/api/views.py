@@ -11,6 +11,11 @@ from .serializers import (ApplicationSerializer, SpecializationSerializer, Skill
                           ApplyCreateSerializer)
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .permissions import IsAdmin
+from rest_framework.decorators import api_view, schema
+from rest_framework.response import Response
+from rest_framework import filters, status
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -20,31 +25,54 @@ class SpecializationsListAPIView(generics.ListAPIView):
     queryset = Specialization.objects.all()
     serializer_class = SpecializationSerializer
 
-class SkillsListAPIView(generics.ListAPIView):
-    queryset = Skill.objects.all()
-    serializer_class = SkillSerializer
+@api_view(['GET'])
+def skill_list_view(request):
+    """
+    Получение списка всех навыков.
+    """
+    # 1. Забираем все объекты из БД
+    skills = Skill.objects.all()
+    
+    # 2. Передаем их в сериализатор (many=True обязателен для списков)
+    serializer = SkillSerializer(skills, many=True)
+    
+    # 3. Возвращаем JSON данные
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
-class UserListAPIView(generics.ListAPIView):
+@swagger_auto_schema(
+    method='get',
+    manual_parameters=[
+        openapi.Parameter(
+            'ordering', 
+            openapi.IN_QUERY, 
+            description="Сортировка. Для обратного порядка добавьте '-' (напр. -username)", 
+            type=openapi.TYPE_STRING, 
+            enum=['username', '-username', 'date_joined', '-date_joined']
+        ),
+    ],
+    responses={200: UserSerializer(many=True)}
+)
+@api_view(['GET'])
+def user_list_view(request):
+    # 1. Получаем базовый QuerySet
     queryset = User.objects.all()
-    serializer_class = UserSerializer
-    # ordering filter
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['username', 'date_joined']
-    ordering = ['username']
-    @swagger_auto_schema(
-        manual_parameters=[
-            openapi.Parameter(
-                'ordering', 
-                openapi.IN_QUERY, 
-                description="Сортировка. Для обратного порядка добавьте '-' (напр. -username)", 
-                type=openapi.TYPE_STRING, 
-                # Вот здесь мы создаем Dropdown!
-                enum=['username', '-username', 'date_joined', '-date_joined']
-            ),
-        ]
-    )
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+
+    # 2. Инициализируем бэкенд сортировки вручную
+    filter_backend = filters.OrderingFilter()
+    
+    # 3. Применяем фильтрацию (сортировку) к QuerySet
+    # Для работы OrderingFilter нам нужно "обмануть" его, 
+    # передав объект view, у которого есть атрибут ordering_fields
+    class MockView:
+        ordering_fields = ['username', 'date_joined']
+        ordering = ['username']
+
+    queryset = filter_backend.filter_queryset(request, queryset, MockView())
+
+    # 4. Сериализуем данные
+    serializer = UserSerializer(queryset, many=True)
+    
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 class UserDetailAPIView(generics.RetrieveAPIView):
     queryset = User.objects.all()

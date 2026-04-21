@@ -1,9 +1,9 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import (UserListAPIView, UserDetailAPIView, UserDetailByUsernameAPIView, UsersBySkillAPIView, 
+from .views import (user_list_view, UserDetailAPIView, UserDetailByUsernameAPIView, UsersBySkillAPIView, 
                     UsersBySpecializationAPIView, UserCreateAPIView, UserProfileAPIView, 
                     UserSpecializationCreateAPIView, UserSpecializationUpdateAPIView, UserSkillCreateAPIView, 
-                    UserSkillUpdateAPIView, SkillsListAPIView, SpecializationsListAPIView, MyTokenObtainPairView,
+                    UserSkillUpdateAPIView, skill_list_view, SpecializationsListAPIView, MyTokenObtainPairView,
                     AdminSpecializationCreateAPIView, AdminSpecializationUpdateAPIView, AdminSpecializationDeleteAPIView,
                     AdminSkillCreateAPIView, AdminSkillUpdateAPIView, AdminSkillDeleteAPIView, PostListAPIView, PostSearchAPIView, PostCreateAPIView, MyPostsListAPIView, PostUpdateAPIView,
                     ApplyCreateAPIView, PostApplicationsListAPIView)
@@ -21,12 +21,12 @@ urlpatterns = [
     path('application/add', ApplyCreateAPIView.as_view()),
     
     ### READ ###
-    path('users/', UserListAPIView.as_view(), name='user-list'), # get all users
+    path('users/', user_list_view, name='user-list'), # get all users
     path('users/id/<int:pk>/', UserDetailAPIView.as_view(), name='user-detail-id'), # get user by ID
     path('users/username/<str:username>/', UserDetailByUsernameAPIView.as_view(), name='user-detail-username'), # get user by username
     path('users/by-specialization/<int:spec_id>/', UsersBySpecializationAPIView.as_view(), name='users-by-spec'), # filter users by specialization. Sorting enabled(by level, by username, by date_joined)
     path('users/by-skill/<int:skill_id>/', UsersBySkillAPIView.as_view(), name='users-by-skill'), # filter users by skill. Sorting enabled(by level, by username, by date_joined)
-    path('skills/', SkillsListAPIView.as_view()), # get all skills
+    path('skills/', skill_list_view), # get all skills
     path('specializations/', SpecializationsListAPIView.as_view()),  # get all specializations
     path('posts/', PostListAPIView.as_view()), # get all posts
     path('posts/search/<str:text>', PostSearchAPIView.as_view()), # search posts by title/description
