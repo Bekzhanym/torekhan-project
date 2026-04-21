@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { PostFormComponent, PostFormValue, SkillOption } from '../post-form/post-form.component';
@@ -22,6 +23,7 @@ interface User {
 
 interface Post {
   id: number;
+  title: string;
   author: User;
   description: string;
   skills_required: Skill[];
@@ -36,7 +38,7 @@ interface ApplicationCreatePayload {
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [CommonModule, PostFormComponent, ApplyFormComponent],
+  imports: [CommonModule, FormsModule, PostFormComponent, ApplyFormComponent],
   templateUrl: './dashboard-page.component.html',
   styleUrl: './dashboard-page.component.css',
 })
@@ -61,8 +63,42 @@ export class DashboardPageComponent implements OnInit {
   readonly showApplyForm = signal(false);
   readonly applyPostId = signal<number | null>(null);
 
+  searchQuery = '';
+  readonly isSearching = signal(false);
+
   ngOnInit(): void {
     this.loadSkills();
+    this.loadPosts();
+  }
+
+  search(): void {
+    const trimmed = this.searchQuery.trim();
+    if (!trimmed) {
+      this.loadPosts();
+      return;
+    }
+    this.isSearching.set(true);
+    this.loading.set(true);
+    this.error.set(null);
+
+    this.http
+      .get<Post[]>(`${API_BASE_URL}${API_ENDPOINTS.postsSearch}${encodeURIComponent(trimmed)}`)
+      .subscribe({
+        next: (result) => {
+          this.posts.set(result);
+          this.loading.set(false);
+          this.isSearching.set(false);
+        },
+        error: () => {
+          this.error.set('Ошибка при поиске постов.');
+          this.loading.set(false);
+          this.isSearching.set(false);
+        },
+      });
+  }
+
+  clearSearch(): void {
+    this.searchQuery = '';
     this.loadPosts();
   }
 
@@ -120,6 +156,7 @@ export class DashboardPageComponent implements OnInit {
     this.formMode.set('edit');
     this.editedPostId.set(post.id);
     this.editedInitialValue.set({
+      title: post.title,
       description: post.description,
       contact_link: post.contact_link,
       skills_required: post.skills_required.map((skill) => skill.id),

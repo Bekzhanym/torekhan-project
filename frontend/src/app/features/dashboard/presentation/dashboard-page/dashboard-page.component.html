@@ -6,6 +6,26 @@
     </button>
   </div>
 
+  <div class="search-bar">
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Поиск по заголовку или описанию..."
+      [(ngModel)]="searchQuery"
+      (keydown.enter)="search()"
+    />
+    @if (searchQuery) {
+      <button type="button" class="search-clear" (click)="clearSearch()" aria-label="Очистить">✕</button>
+    }
+    <button type="button" class="search-btn" (click)="search()" [disabled]="isSearching()">
+      @if (isSearching()) {
+        <span class="search-spinner"></span>
+      } @else {
+        Найти
+      }
+    </button>
+  </div>
+
   @if (actionError()) {
     <p class="error">{{ actionError() }}</p>
   }
@@ -71,6 +91,9 @@
           </div>
 
           <p class="post-id">#{{ post.id }}</p>
+          @if (post.title) {
+            <p class="post-title">{{ post.title }}</p>
+          }
           <p class="description">{{ post.description }}</p>
 
           <div class="skills">

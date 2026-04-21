@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, injec
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 export interface PostFormValue {
+  title: string;
   description: string;
   contact_link: string;
   skills_required: number[];
@@ -33,6 +34,7 @@ export class PostFormComponent implements OnChanges {
   @Output() readonly cancelled = new EventEmitter<void>();
 
   readonly form = this.formBuilder.nonNullable.group({
+    title: ['', [Validators.required, Validators.maxLength(200)]],
     description: ['', [Validators.required]],
     contactLink: ['', [Validators.required, Validators.maxLength(100)]],
     skillIds: this.formBuilder.nonNullable.control<number[]>([], [Validators.required]),
@@ -41,6 +43,7 @@ export class PostFormComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['initialValue'] && this.initialValue) {
       this.form.setValue({
+        title: this.initialValue.title,
         description: this.initialValue.description,
         contactLink: this.initialValue.contact_link,
         skillIds: [...this.initialValue.skills_required],
@@ -50,6 +53,7 @@ export class PostFormComponent implements OnChanges {
 
     if (changes['mode'] && this.mode === 'create' && !this.initialValue) {
       this.form.reset({
+        title: '',
         description: '',
         contactLink: '',
         skillIds: [],
@@ -80,6 +84,7 @@ export class PostFormComponent implements OnChanges {
     const raw = this.form.getRawValue();
 
     this.submitted.emit({
+      title: raw.title.trim(),
       description: raw.description.trim(),
       contact_link: raw.contactLink.trim(),
       skills_required: raw.skillIds,

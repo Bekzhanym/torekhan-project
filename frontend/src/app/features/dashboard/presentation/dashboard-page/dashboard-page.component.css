@@ -29,6 +29,88 @@ h1 {
   cursor: not-allowed;
 }
 
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.6rem 2.5rem 0.6rem 0.9rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  border-color: #2563eb;
+}
+
+.search-clear {
+  position: absolute;
+  right: 90px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0.2rem 0.3rem;
+}
+
+.search-clear:hover {
+  color: #475569;
+}
+
+.search-btn {
+  flex-shrink: 0;
+  margin-left: 8px;
+  padding: 0.6rem 2rem;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+  min-width: 120px;
+}
+
+.search-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.search-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.post-title {
+  margin: 0 0 0.4rem;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));

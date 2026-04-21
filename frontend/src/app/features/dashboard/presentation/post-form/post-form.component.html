@@ -2,6 +2,17 @@
   <h2>{{ mode === 'create' ? 'Создать пост' : 'Редактировать пост' }}</h2>
 
   <form [formGroup]="form" (ngSubmit)="submit()">
+    <label for="title">Заголовок</label>
+    <input
+      id="title"
+      type="text"
+      formControlName="title"
+      placeholder="Кратко о задаче"
+    />
+    <p class="field-error" *ngIf="form.controls.title.touched && form.controls.title.invalid">
+      Заголовок обязателен (до 200 символов).
+    </p>
+
     <label for="description">Описание</label>
     <textarea
       id="description"
