@@ -19,9 +19,19 @@
           <article class="application-card">
             <h2>{{ application.user.username }}</h2>
             <p class="meta">{{ application.user.email }}</p>
+            <p class="meta">Роль: {{ application.user.role || 'Не указана' }}</p>
+            <p class="meta">ID поста: {{ application.post }}</p>
             <p class="meta">Telegram: {{ application.user.telegram || 'Не указан' }}</p>
             <p class="meta">Телефон: {{ application.user.phone_number || 'Не указан' }}</p>
+            <p class="meta">
+              Специализации:
+              {{ application.user.specializations?.length ? (application.user.specializations | json) : 'Нет' }}
+            </p>
             <p class="description">{{ application.description }}</p>
+            <details class="raw-json">
+              <summary>Показать полный JSON заявки</summary>
+              <pre>{{ application | json }}</pre>
+            </details>
           </article>
         }
       </div>

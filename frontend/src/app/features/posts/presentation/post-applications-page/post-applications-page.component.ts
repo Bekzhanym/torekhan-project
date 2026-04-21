@@ -11,6 +11,8 @@ interface ApplicantUser {
   email: string;
   telegram?: string | null;
   phone_number?: string | null;
+  role?: string;
+  specializations?: unknown[];
 }
 
 interface PostApplication {
