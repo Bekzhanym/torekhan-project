@@ -1,13 +1,13 @@
 <article class="apply-form-card">
-  <h2>Откликнуться на пост @if (postId) { #{{ postId }} }</h2>
+  <h2>Откликнитесь на пост. ID поста: @if (postId) { #{{ postId }} }</h2>
 
   <form [formGroup]="form" (ngSubmit)="submit()">
-    <label for="applyDescription">Сообщение</label>
+    <label for="applyDescription">Сопроводительное письмо</label>
     <textarea
       id="applyDescription"
       rows="6"
       formControlName="description"
-      placeholder="I'm very interested in this project and have the required skills"
+      placeholder="У меня есть все скиллы которые вам нужны, и я думаю что мы вместе сможем построить хорошую команду."
     ></textarea>
     <p class="field-error" *ngIf="form.controls.description.touched && form.controls.description.invalid">
       Добавьте текст заявки.
