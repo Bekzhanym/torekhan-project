@@ -1,6 +1,6 @@
 <section class="dashboard-page">
   <div class="page-header">
-    <h1>Posts</h1>
+    <h1>Посты</h1>
     <button type="button" class="create-btn" (click)="openCreateForm()" [disabled]="isSaving()">
       Создать пост
     </button>
@@ -45,7 +45,7 @@
   }
 
   @if (loading()) {
-    <p>Loading posts...</p>
+    <p>Загрузка постов...</p>
   }
 
   @if (error()) {
@@ -79,7 +79,7 @@
             }
           </div>
 
-          <p class="contact"><strong>Contact:</strong> {{ post.contact_link }}</p>
+          <p class="contact"><strong>Контакт:</strong> {{ post.contact_link }}</p>
 
           <div class="card-actions">
             <button type="button" class="join-btn" (click)="$event.stopPropagation(); openApplyForm(post.id)" [disabled]="isSaving()">

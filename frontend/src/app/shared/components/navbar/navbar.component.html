@@ -1,7 +1,7 @@
 <header class="header">
   <div class="header-inner">
     <nav class="nav-left" aria-label="Main navigation">
-      <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Посттар</a>
+      <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Посты</a>
     </nav>
 
     <div class="nav-right">
@@ -13,7 +13,6 @@
 
         @if (isMenuOpen()) {
           <div class="menu-panel">
-            <button type="button" class="menu-item" (click)="closeMenu()">Настройки</button>
             <button type="button" class="menu-item" routerLink="/profile" (click)="closeMenu()">Профиль</button>
             <button type="button" class="menu-item logout" (click)="logout()">Выйти из аккаунта</button>
           </div>
