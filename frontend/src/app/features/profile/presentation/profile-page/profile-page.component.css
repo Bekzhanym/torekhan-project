@@ -202,13 +202,47 @@ button.danger {
 
 .post-item {
   border-top: 1px solid #e2e8f0;
-  padding-top: 12px;
-  margin-top: 12px;
+  padding-top: 16px;
+  margin-top: 16px;
+}
+
+.post-item-clickable {
+  cursor: pointer;
+}
+
+.post-item-clickable:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.post-item .value {
+  margin: 0 0 8px;
 }
 
 .post-description {
-  margin: 8px 0;
+  margin: 0 0 6px;
   color: #1e293b;
+  line-height: 1.45;
+}
+
+.post-item .meta {
+  margin: 4px 0 0;
+}
+
+.post-actions {
+  margin-top: 10px;
+  gap: 6px;
+}
+
+.post-actions button {
+  padding: 7px 10px;
+  font-size: 12px;
+  border-radius: 8px;
+}
+
+.post-edit-btn {
+  padding: 6px 10px;
+  font-size: 12px;
 }
 
 .post-edit-form {

@@ -31,6 +31,19 @@
     </div>
   }
 
+  @if (showApplyForm()) {
+    <div class="sheet-overlay" (click)="closeApplyForm()">
+      <div class="sheet-container" (click)="$event.stopPropagation()">
+        <app-apply-form
+          [postId]="applyPostId()"
+          [isSaving]="isSaving()"
+          (submitted)="applyToPost($event)"
+          (cancelled)="closeApplyForm()"
+        />
+      </div>
+    </div>
+  }
+
   @if (loading()) {
     <p>Loading posts...</p>
   }
@@ -42,7 +55,13 @@
   @if (!loading() && !error()) {
     <div class="cards-grid">
       @for (post of posts(); track post.id) {
-        <article class="post-card">
+        <article
+          class="post-card post-card-clickable"
+          role="button"
+          tabindex="0"
+          (click)="openPostDetails(post.id)"
+          (keydown.enter)="openPostDetails(post.id)"
+        >
           <div class="card-header">
             <div>
               <h3>{{ post.author.username }}</h3>
@@ -63,11 +82,8 @@
           <p class="contact"><strong>Contact:</strong> {{ post.contact_link }}</p>
 
           <div class="card-actions">
-            <button type="button" class="secondary-btn" (click)="openEditForm(post)" [disabled]="isSaving()">
-              Редактировать
-            </button>
-            <button type="button" class="danger-btn" (click)="deletePost(post.id)" [disabled]="isSaving()">
-              Удалить
+            <button type="button" class="join-btn" (click)="$event.stopPropagation(); openApplyForm(post.id)" [disabled]="isSaving()">
+              Присоединиться
             </button>
           </div>
         </article>

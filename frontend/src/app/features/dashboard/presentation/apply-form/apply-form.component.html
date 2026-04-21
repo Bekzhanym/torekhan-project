@@ -1,0 +1,21 @@
+<article class="apply-form-card">
+  <h2>Откликнуться на пост @if (postId) { #{{ postId }} }</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label for="applyDescription">Сообщение</label>
+    <textarea
+      id="applyDescription"
+      rows="6"
+      formControlName="description"
+      placeholder="I'm very interested in this project and have the required skills"
+    ></textarea>
+    <p class="field-error" *ngIf="form.controls.description.touched && form.controls.description.invalid">
+      Добавьте текст заявки.
+    </p>
+
+    <div class="actions">
+      <button type="submit" [disabled]="isSaving">{{ isSaving ? 'Отправляем...' : 'Отправить заявку' }}</button>
+      <button type="button" class="ghost" [disabled]="isSaving" (click)="cancel()">Отмена</button>
+    </div>
+  </form>
+</article>

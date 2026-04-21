@@ -27,6 +27,8 @@ export class LoginPageComponent {
   readonly form = this.formBuilder.nonNullable.group({
     username: ['', [Validators.required]],
     email: ['', [Validators.email]],
+    telegram: ['', [Validators.maxLength(50)]],
+    phoneNumber: ['', [Validators.maxLength(20)]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     rememberMe: [false],
   });
@@ -37,6 +39,8 @@ export class LoginPageComponent {
     this.success.set(null);
     this.passwordVisible.set(false);
     this.form.controls.password.reset('');
+    this.form.controls.telegram.reset('');
+    this.form.controls.phoneNumber.reset('');
     this.form.controls.rememberMe.reset(false);
   }
 
@@ -53,7 +57,7 @@ export class LoginPageComponent {
       return;
     }
 
-    const { username, email, password } = this.form.getRawValue();
+    const { username, email, telegram, phoneNumber, password } = this.form.getRawValue();
     this.isLoading.set(true);
 
     if (this.mode() === 'register') {
@@ -63,7 +67,15 @@ export class LoginPageComponent {
         return;
       }
 
-      this.loginUseCase.register({ username, email, password }).subscribe({
+      this.loginUseCase
+        .register({
+          username: username.trim(),
+          email: email.trim(),
+          telegram: telegram.trim() || undefined,
+          phone_number: phoneNumber.trim() || undefined,
+          password,
+        })
+        .subscribe({
         next: () => {
           this.isLoading.set(false);
           this.success.set('Registration successful. Now sign in.');

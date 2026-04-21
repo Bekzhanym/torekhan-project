@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { PostFormComponent, PostFormValue, SkillOption } from '../post-form/post-form.component';
+import { ApplyFormComponent, ApplyFormValue } from '../apply-form/apply-form.component';
 import { API_BASE_URL, API_ENDPOINTS } from '../../../../shared/constants/api.constants';
 
 interface Skill {
@@ -27,14 +29,20 @@ interface Post {
   contact_link: string;
 }
 
+interface ApplicationCreatePayload {
+  post: number;
+  description: string;
+}
+
 @Component({
   selector: 'app-dashboard-page',
-  imports: [CommonModule, PostFormComponent],
+  imports: [CommonModule, PostFormComponent, ApplyFormComponent],
   templateUrl: './dashboard-page.component.html',
   styleUrl: './dashboard-page.component.css',
 })
 export class DashboardPageComponent implements OnInit {
   private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
 
   readonly posts = signal<Post[]>([]);
   readonly loading = signal(true);
@@ -50,6 +58,8 @@ export class DashboardPageComponent implements OnInit {
   readonly formMode = signal<'create' | 'edit'>('create');
   readonly editedPostId = signal<number | null>(null);
   readonly editedInitialValue = signal<PostFormValue | null>(null);
+  readonly showApplyForm = signal(false);
+  readonly applyPostId = signal<number | null>(null);
 
   ngOnInit(): void {
     this.loadSkills();
@@ -127,6 +137,22 @@ export class DashboardPageComponent implements OnInit {
     this.editedInitialValue.set(null);
   }
 
+  openApplyForm(postId: number): void {
+    this.actionError.set(null);
+    this.actionSuccess.set(null);
+    this.applyPostId.set(postId);
+    this.showApplyForm.set(true);
+  }
+
+  closeApplyForm(): void {
+    if (this.isSaving()) {
+      return;
+    }
+
+    this.showApplyForm.set(false);
+    this.applyPostId.set(null);
+  }
+
   submitPostForm(value: PostFormValue): void {
     this.actionError.set(null);
     this.actionSuccess.set(null);
@@ -182,6 +208,40 @@ export class DashboardPageComponent implements OnInit {
       },
       error: () => {
         this.actionError.set('Failed to delete post.');
+        this.isSaving.set(false);
+      },
+    });
+  }
+
+  openPostDetails(postId: number): void {
+    this.router.navigate(['/posts', postId], { queryParams: { from: 'dashboard' } });
+  }
+
+  applyToPost(value: ApplyFormValue): void {
+    this.actionError.set(null);
+    this.actionSuccess.set(null);
+    this.isSaving.set(true);
+    const postId = this.applyPostId();
+
+    if (!postId) {
+      this.actionError.set('Не найден пост для заявки.');
+      this.isSaving.set(false);
+      return;
+    }
+
+    const payload: ApplicationCreatePayload = {
+      post: postId,
+      description: value.description,
+    };
+
+    this.http.post(`${API_BASE_URL}${API_ENDPOINTS.applicationAdd}`, payload).subscribe({
+      next: () => {
+        this.actionSuccess.set('Заявка отправлена.');
+        this.isSaving.set(false);
+        this.closeApplyForm();
+      },
+      error: () => {
+        this.actionError.set('Не удалось отправить заявку.');
         this.isSaving.set(false);
       },
     });

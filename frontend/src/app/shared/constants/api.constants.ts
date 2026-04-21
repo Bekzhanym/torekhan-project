@@ -14,6 +14,7 @@ export const API_ENDPOINTS = {
   specializations: '/api/specializations/',
   posts: '/api/posts/',
   postsAdd: '/api/posts/add',
+  applicationAdd: '/api/application/add',
   services: '/api/services',
   bookings: '/api/bookings',
   reviews: '/api/reviews',

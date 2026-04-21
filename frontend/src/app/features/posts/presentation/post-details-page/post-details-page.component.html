@@ -1,0 +1,59 @@
+<section class="post-details-page">
+  <a class="back-link" [routerLink]="backRoute()">{{ backLabel() }}</a>
+
+  @if (actionError()) {
+    <p class="state-text error">{{ actionError() }}</p>
+  }
+
+  @if (actionSuccess()) {
+    <p class="state-text success">{{ actionSuccess() }}</p>
+  }
+
+  @if (loading()) {
+    <p class="state-text">Загрузка поста...</p>
+  }
+
+  @if (error()) {
+    <p class="state-text error">{{ error() }}</p>
+  }
+
+  @if (!loading() && !error() && post(); as currentPost) {
+    <article class="post-card">
+      <div class="card-header">
+        <div>
+          <h1>{{ currentPost.author.username }}</h1>
+          <p class="author-email">{{ currentPost.author.email }}</p>
+        </div>
+        <span class="date">{{ currentPost.created_at | date:'mediumDate' }}</span>
+      </div>
+
+      <p class="post-id">#{{ currentPost.id }}</p>
+      <p class="description">{{ currentPost.description }}</p>
+
+      <div class="skills">
+        @for (skill of currentPost.skills_required; track skill.id) {
+          <span class="skill-tag">{{ skill.name }}</span>
+        }
+      </div>
+
+      <p class="contact"><strong>Contact:</strong> {{ currentPost.contact_link }}</p>
+
+      <div class="actions">
+        <button type="button" class="join-btn" (click)="openApplyForm()" [disabled]="isSaving()">Присоединиться</button>
+      </div>
+    </article>
+  }
+
+  @if (showApplyForm()) {
+    <div class="sheet-overlay" (click)="closeApplyForm()">
+      <div class="sheet-container" (click)="$event.stopPropagation()">
+        <app-apply-form
+          [postId]="post()?.id ?? null"
+          [isSaving]="isSaving()"
+          (submitted)="applyToPost($event)"
+          (cancelled)="closeApplyForm()"
+        />
+      </div>
+    </div>
+  }
+</section>

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, HostListener, OnInit, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { API_BASE_URL, API_ENDPOINTS } from '../../../../shared/constants/api.constants';
 
@@ -68,6 +69,7 @@ type ProfileModalType =
 export class ProfilePageComponent implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly router = inject(Router);
 
   readonly profile = signal<ProfileResponse | null>(null);
   readonly myPosts = signal<ProfilePost[]>([]);
@@ -558,6 +560,10 @@ export class ProfilePageComponent implements OnInit {
         this.isSaving.set(false);
       },
     });
+  }
+
+  openPostDetails(postId: number): void {
+    this.router.navigate(['/posts', postId], { queryParams: { from: 'profile' } });
   }
 
   getSkillNames(post: ProfilePost): string {

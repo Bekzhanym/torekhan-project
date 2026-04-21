@@ -88,6 +88,7 @@ form {
 
 input[type='text'],
 input[type='email'],
+input[type='tel'],
 input[type='password'] {
   width: 100%;
   border: 1px solid #cbd5e1;

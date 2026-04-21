@@ -82,21 +82,43 @@
 
     <p *ngIf="isPostsLoading()" class="state-text">Загрузка постов...</p>
 
-    <div *ngFor="let post of myPosts()" class="post-item">
+    <div
+      *ngFor="let post of myPosts()"
+      class="post-item post-item-clickable"
+      role="button"
+      tabindex="0"
+      (click)="openPostDetails(post.id)"
+      (keydown.enter)="openPostDetails(post.id)"
+    >
       <p class="value">#{{ post.id }} · {{ post.created_at | date:'mediumDate' }}</p>
       <p class="post-description">{{ post.description }}</p>
       <p class="meta">Contact: {{ post.contact_link }}</p>
       <p class="meta">Skills: {{ getSkillNames(post) }}</p>
 
-      <div class="inline-actions">
-        <button type="button" [disabled]="isSaving()" (click)="startEditPost(post)">Редактировать пост</button>
-        <button type="button" class="danger" [disabled]="isSaving()" (click)="deletePost(post.id)">Удалить пост</button>
+      <div class="inline-actions post-actions">
+        <button
+          type="button"
+          class="post-edit-btn"
+          [disabled]="isSaving()"
+          (click)="$event.stopPropagation(); startEditPost(post)"
+        >
+          Редактировать пост
+        </button>
+        <button
+          type="button"
+          class="danger"
+          [disabled]="isSaving()"
+          (click)="$event.stopPropagation(); deletePost(post.id)"
+        >
+          Удалить пост
+        </button>
       </div>
 
       <form
         *ngIf="editingPostId() === post.id"
         class="post-edit-form"
         [formGroup]="postEditForm"
+        (click)="$event.stopPropagation()"
         (ngSubmit)="updatePost(post.id)"
       >
         <label>Описание</label>
@@ -110,7 +132,7 @@
 
         <div class="inline-actions">
           <button type="submit" [disabled]="isSaving()">Сохранить пост</button>
-          <button type="button" [disabled]="isSaving()" (click)="cancelEditPost()">Отмена</button>
+          <button type="button" [disabled]="isSaving()" (click)="$event.stopPropagation(); cancelEditPost()">Отмена</button>
         </div>
       </form>
     </div>

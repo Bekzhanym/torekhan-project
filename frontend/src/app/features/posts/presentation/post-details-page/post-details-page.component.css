@@ -1,0 +1,129 @@
+.post-details-page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.state-text {
+  margin: 0.5rem 0;
+}
+
+.error {
+  color: #dc2626;
+}
+
+.success {
+  color: #15803d;
+}
+
+.post-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 1rem;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.author-email {
+  margin: 0.15rem 0 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.date {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.post-id {
+  margin: 0 0 0.5rem;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.description {
+  margin: 0 0 0.85rem;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 1rem;
+}
+
+.skill-tag {
+  font-size: 12px;
+  padding: 0.22rem 0.6rem;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #3730a3;
+}
+
+.contact {
+  margin: 0;
+  color: #334155;
+  font-size: 14px;
+}
+
+.actions {
+  margin-top: 14px;
+}
+
+.join-btn {
+  border: 0;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #ffffff;
+  padding: 0.55rem 0.85rem;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.join-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+
+.sheet-container {
+  width: min(760px, 100%);
+  max-height: calc(100vh - 24px);
+}
