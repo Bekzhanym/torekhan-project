@@ -34,6 +34,7 @@ interface ProfileResponse {
 
 interface ProfilePost {
   id: number;
+  title: string;
   description: string;
   created_at: string;
   contact_link: string;
@@ -113,6 +114,7 @@ export class ProfilePageComponent implements OnInit {
   });
 
   readonly postEditForm = this.formBuilder.nonNullable.group({
+    title: ['', [Validators.required]],
     description: ['', [Validators.required]],
     contactLink: ['', [Validators.required, Validators.maxLength(100)]],
     skillIds: ['', [Validators.required]],
@@ -492,6 +494,7 @@ export class ProfilePageComponent implements OnInit {
   startEditPost(post: ProfilePost): void {
     this.editingPostId.set(post.id);
     this.postEditForm.setValue({
+      title: post.title,
       description: post.description,
       contactLink: post.contact_link,
       skillIds: post.skills_required.map((skill) => skill.id).join(', '),
@@ -501,6 +504,7 @@ export class ProfilePageComponent implements OnInit {
   cancelEditPost(): void {
     this.editingPostId.set(null);
     this.postEditForm.reset({
+      title: '',
       description: '',
       contactLink: '',
       skillIds: '',
@@ -526,6 +530,7 @@ export class ProfilePageComponent implements OnInit {
     this.isSaving.set(true);
     this.http
       .patch(`${API_BASE_URL}${API_ENDPOINTS.posts}${postId}`, {
+        title: this.postEditForm.controls.title.getRawValue().trim(),
         description: this.postEditForm.controls.description.getRawValue().trim(),
         contact_link: this.postEditForm.controls.contactLink.getRawValue().trim(),
         skills_required: skillIds,

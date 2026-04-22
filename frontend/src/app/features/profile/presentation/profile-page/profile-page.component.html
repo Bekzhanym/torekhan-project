@@ -91,9 +91,10 @@
       (keydown.enter)="openPostDetails(post.id)"
     >
       <p class="value">#{{ post.id }} · {{ post.created_at | date:'mediumDate' }}</p>
+      <p class="value">Название: {{post.title}}</p>
       <p class="post-description">{{ post.description }}</p>
-      <p class="meta">Contact: {{ post.contact_link }}</p>
-      <p class="meta">Skills: {{ getSkillNames(post) }}</p>
+      <p class="meta">Контакты: {{ post.contact_link }}</p>
+      <p class="meta">Навыки: {{ getSkillNames(post) }}</p>
 
       <div class="inline-actions post-actions">
         <button
