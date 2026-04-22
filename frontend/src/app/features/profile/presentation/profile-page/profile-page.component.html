@@ -130,6 +130,9 @@
         (click)="$event.stopPropagation()"
         (ngSubmit)="updatePost(post.id)"
       >
+        <label>Название</label>
+        <input type="text" formControlName="title" />
+
         <label>Описание</label>
         <textarea rows="4" formControlName="description"></textarea>
 
